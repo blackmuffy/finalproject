@@ -1,5 +1,6 @@
 # finalproject
 brickbreaker
+Authors: Vanice Cheung and Sara Cunningham
 
 1. . So, at a bare minimum, you are required to develop and deposit “lab 8
 milestones” into your drop box before leaving lab. This, in short, will be a simple
