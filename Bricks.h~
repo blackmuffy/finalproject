@@ -9,16 +9,21 @@ class Bricks{
 	
 	public:
 		Brick();	// constructor
-		~Brick();	// deconstructor	
+		void setType(char);
+		char getType();	
 	private:
+		char type;
 };
 
 Brick::Brick(){
-
+	type = 'e';
+}
+void Brick::setType(char t){
+	type = t;
 }
 
-Brick::~Brick(){
-
+char Brick::getType(){
+	return type;
 }
 
 #endif

@@ -8,21 +8,21 @@
 class Bricks{
 	
 	public:
-		Brick();	// constructor
+		Bricks();	// constructor
 		void setType(char);
 		char getType();	
 	private:
 		char type;
 };
 
-Brick::Brick(){
+Bricks::Bricks(){
 	type = 'e';
 }
-void Brick::setType(char t){
+void Bricks::setType(char t){
 	type = t;
 }
 
-char Brick::getType(){
+char Bricks::getType(){
 	return type;
 }
 
