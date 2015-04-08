@@ -1,0 +1,25 @@
+Sara Cunningham Report for Lab 7/8
+
+Our shared repository (with rubric): 
+https://github.com/blackmuffy/finalproject
+
+This week, I focused on going through the SDL tutorials on lazyFoo, especially the ones to load image files. 
+
+User:
+	When the user runs bmpOnly a graphics window is created and a question mark (sample.bmp) appears on the screen for 5 seconds.  If the user runs image, currently they will get an error that the shared library doesn't exist.  I'm currently trying to figure out why. But, it should do the same as the previous program and then also open a window and display the linux penguin (a png) for 5 seconds before also closing the window.  
+
+Internal:
+	The SDL and SDL_image libraries. The following applies to both the processes to load .bmp files and .png files. Created window and surface objects. Initlalized the windows.  Loaded the picture to the surface and then updated the surface to the window.  Delayed the window and then closed it.  Freed up allocated memory and quit the included libraries. 
+
+Time Log for this week:
+	HRS: 	TASK:
+	1	Troubleshooting Vanice's account, had problems setting up environment 
+	4	Went through some lazyFoo tutorials, focued on images
+	2	created image.cpp and bmpOnly.cpp and started troubleshooting image.cpp
+
+*if you run the executable image, I receive the following error message:
+./image: error while loading shared libraries: libSDL2-2.0.so.0: cannot open shared object file: No such file or directory
+I did the setenv for both the path and library like suggest on piazza
+
+
+

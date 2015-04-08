@@ -1,0 +1,24 @@
+/*Header and implemenation of brick class*/
+
+#ifndef BRICKS_H
+#define BRICKS_H
+
+#include<iostream>
+
+class Bricks{
+	
+	public:
+		Brick();	// constructor
+		~Brick();	// deconstructor	
+	private:
+};
+
+Brick::Brick(){
+
+}
+
+Brick::~Brick(){
+
+}
+
+#endif
