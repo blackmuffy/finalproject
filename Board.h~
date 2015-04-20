@@ -3,6 +3,7 @@
 #define BOARD_H
 #include<iostream> 
 #include"Bricks.h" 
+
 using namespace std; 
 
 class Board{
@@ -15,15 +16,15 @@ class Board{
 		void DisplayBoard(); 
 	private:
 		
-		Bricks ** PlayingBoard;
+		ObjFill ** PlayingBoard;
 
 }; 
 
 Board::Board(){
 	
-	PlayingBoard = new Bricks*[42];
+	PlayingBoard = new ObjFill*[42];
 	for(int i = 0; i<42; i++)
-		PlayingBoard[i] = new Bricks[36];  
+		PlayingBoard[i] = new ObjFill[36];  
 		
 	for(int m = 0; m<42; m++){
 		PlayingBoard[0][m].setType('a');   
@@ -41,13 +42,13 @@ Board::~Board(){
 }
 
 char Board::GetType( int Xpos , int Ypos){
-	
+	return(PlayingBoard[Ypos][Xpos].getType()); 
 
 }
 
-void Board::SetType(int Xpos, int Ypos, char type){
+void Board::SetType(int Ypos, int Xpos, char type){
 	for(int i = 0; i<3; i++){
-			PlayingBoard[Xpos][Ypos+i].setType(type);   	  
+			PlayingBoard[Ypos][Xpos+i].setType(type);   	  
 	}
 }
 
