@@ -1,7 +1,11 @@
 #include <iostream> 
 #include "Board.h"
+<<<<<<< HEAD
 //#include "Ball.h"
 #include <cstdlib> 
+=======
+//#include <cstdlib>
+>>>>>>> e68776389d444abb93aba39e6849ef465bbd22a7
 
 using namespace std; 
 
