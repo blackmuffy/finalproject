@@ -42,7 +42,7 @@ Board::~Board(){
 
 char Board::GetType( int Xpos , int Ypos){
 	
-
+  return(PlayingBoard[Ypos][Xpos].getType());
 }
 
 void Board::SetType(int Ypos, int Xpos, char type){
