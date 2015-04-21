@@ -3,11 +3,12 @@ specifies the type of object that filles that space on the board */
 
 /* TYPE LIST:
 	'a' --> normal brick
+	'b' --> normal ball
 	'e' --> empty space 
 */
 
-#ifndef BRICKS_H
-#define BRICKS_H
+#ifndef OBJFILL_H
+#define OBJFILL_H
 
 #include<iostream>
 
