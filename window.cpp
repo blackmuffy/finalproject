@@ -5,14 +5,16 @@
 using namespace std;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 900;
+#define SCREEN_WIDTH	600
+#define SCREEN_HEIGHT	900
+
 
 int main( int argc, char* args[] ){
 
 	SDL_Window *window = NULL; // the window we'll be rendering to 
 	SDL_Surface *surface = NULL; // the surface contained by the window
-	SDL_Surface *background; //the background image for the screen surface
+	SDL_Surface *background; //the background image for the screen surface	
+	
 	//Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
 		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -25,7 +27,7 @@ int main( int argc, char* args[] ){
 			surface = SDL_GetWindowSurface( window ); //get window surface
 			//Fill the surface white
 			//SDL_FillRect( surface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-			background = SDL_LoadBMP("space.bmp"); //load image
+			background = SDL_LoadBMP("deep-space-2.bmp"); //load image
 			SDL_BlitSurface(background, NULL, surface, NULL); // blit it to screen
 			SDL_UpdateWindowSurface( window ); // update window surface
 			SDL_Delay( 9000 ); //delay nine seconds

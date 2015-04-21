@@ -3,7 +3,8 @@ specifies the type of brick that files each grid space*/
 
 /* TYPE LIST:
 	'a' --> normal brick
-	'e' --> empty space 
+	'e' --> empty space 	
+	'w' --> wall 
 */
 
 #ifndef BRICK_H
