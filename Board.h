@@ -22,19 +22,19 @@ class Board{
 
 Board::Board(){
 	
-	PlayingBoard = new ObjFill*[42];
-	for(int i = 0; i<42; i++)
+	PlayingBoard = new ObjFill*[12];
+	for(int i = 0; i<12; i++)
 		PlayingBoard[i] = new ObjFill[36];  
 		
-	for(int m = 0; m<42; m++){
+	for(int m = 0; m<12; m++){
 		PlayingBoard[0][m].setType('a');   
 	}
-	for(int n = 0; n<42; n++){
+	for(int n = 0; n<12; n++){
 		for(int k = 1; k <36; k++){
 			PlayingBoard[k][n].setType('e'); 
 		} 
 	}
-	SetType(35,21,'p');
+	//SetType(35,21,'p');
 }
 
 Board::~Board(){
