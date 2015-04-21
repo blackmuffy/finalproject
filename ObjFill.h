@@ -1,38 +1,38 @@
-/*Header and implemenation of ObjFill class
-specifies the type of object that filles that space on the board */ 
+/*Header and implemenation of Brick class
+specifies the type of brick that files each grid space*/ 
 
 /* TYPE LIST:
 	'a' --> normal brick
 	'e' --> empty space 
 */
 
-#ifndef BRICKS_H
-#define BRICKS_H
+#ifndef BRICK_H
+#define BRICK_H
 
 #include<iostream>
 
-class ObjFill{
+class Brick{
 	
 	public:
-		ObjFill();	// constructor
+		Brick();	// constructor
 		void setType(char);  // set type of space
 		char getType();	// return type of spce
 	private:
-		char type; //specify the type of object that fills the board, i.e. brick, ball, empty, etc. 
+		char type; //specify the type of brick that fills the board, i.e. brick, empty, etc. 
 };
 
 // constructor 
-ObjFill::ObjFill(){
-	type = 'e'; // assume the board is filled of empty spaces
+Brick::Brick(){
+	type = 'e'; // assume the board is filled of empty bricks
 }
 
-// member function to set the type of object that fills the space
-void ObjFill::setType(char t){
+// member function to set the type of brick that fills the space
+void Brick::setType(char t){
 	type = t;
 }
 
-// member function to return the type of object that fills the space
-char ObjFill::getType(){
+// member function to return the type of brick that fills the space
+char Brick::getType(){
 	return type;
 }
 
