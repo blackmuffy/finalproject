@@ -1,14 +1,26 @@
 #include <iostream> 
 #include "Board.h"
-//#include "Ball.h"
 #include <cstdlib> 
 
 using namespace std; 
 
 int main(){
+	int xposofball; 
+	int yposofball; 
 
 	Board tester; 
-	tester.DisplayBoard(); 
-	//system("clear"); 
+	while(1){
+	
+		if(tester.getType[][]){ //next in path is not a brick 
+		
+		else(){	// next in path is brick 
+		
 
+
+
+		}
+		tester.DisplayBoard(); 
+		cout << endl; 
+		//system("clear"); 
+	}
 }
