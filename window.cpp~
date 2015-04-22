@@ -27,7 +27,7 @@ int main( int argc, char* args[] ){
 			surface = SDL_GetWindowSurface( window ); //get window surface
 			//Fill the surface white
 			//SDL_FillRect( surface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-			background = SDL_LoadBMP("space.bmp"); //load image
+			background = SDL_LoadBMP("deep-space-2.bmp"); //load image
 			SDL_BlitSurface(background, NULL, surface, NULL); // blit it to screen
 			SDL_UpdateWindowSurface( window ); // update window surface
 			SDL_Delay( 9000 ); //delay nine seconds
