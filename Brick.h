@@ -8,7 +8,8 @@ specifies the type of brick that files each grid space*/
 	'h' --> hard brick, takes 2 times to kill 
 	'i' --> invisible solid row that does not change for the row that contains the paddle 
 	's' --> solid bricks never get destroyed
-	'x' --> delete all bricks of most popular color; 
+	'x' --> delete all bricks of most popular color;
+	'g' --> give shooting powers to pad;  
 */
 
 #ifndef BRICK_H

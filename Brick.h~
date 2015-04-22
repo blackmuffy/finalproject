@@ -8,7 +8,8 @@ specifies the type of brick that files each grid space*/
 	'h' --> hard brick, takes 2 times to kill 
 	'i' --> invisible solid row that does not change for the row that contains the paddle 
 	's' --> solid bricks never get destroyed
-	'x' --> delete all bricks of most popular color; 
+	'x' --> delete all bricks of most popular color;
+	'g' --> give shooting powers to pad;  
 */
 
 #ifndef BRICK_H
@@ -41,6 +42,7 @@ int Brick::getColor(){
 // constructor 
 Brick::Brick(){
 	type = 'e'; // assume the board is filled of empty bricks
+	color = 2; 
 }
 
 // member function to set the type of brick that fills the space

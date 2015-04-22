@@ -20,23 +20,26 @@ int main(){
     int yfactor = 1;			// "
     int xvelocity = 1; 
     int yvelocity  = 1; 
-    
     //---------------------------|
     
-    int hit = 0;
-    Board tester;
-    tester.DisplayBoard(); 
-    cout << tester.FindPopular(); 
-    exit(1); 
+    //Initiate variables---------|
+    int hit = 0;			//nothing is hit at the beginning 
+    Board Game;
+    Game.DisplayBoard(); 
+    char type; 
+    int TurnOnGun = 0; 
+    //---------------------------|
+    
+    
+    
     
     for(int w = 0; w < 310; w++){
         
         for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
             checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
             checkypos = yposofball +radiusofball*sin(i*M_PI/2);
-	    //cout << tester.GetType(checkxpos, checkypos);
-            if(tester.GetType(checkxpos, checkypos) != 'e'){ 
-		//cout << "something was hit ";
+            type = tester.GetType(checkxpos,checkypos); 
+            if(type != 'e'){ 
                 hit = 1;
 		face = i+1;
                 break;
@@ -44,7 +47,12 @@ int main(){
             else
             	hit = 0;    
         }
-        cout << "face = " << face << " hit = " << hit; 
+        
+        //**Paddlecheck into a case 
+        //if(Game.Paddlecheck(intpositionofpaddle))
+       
+       
+        //change x and y velocity factors ----------|
         if(hit == 1){
             switch(face){
                 case 1:
@@ -65,12 +73,41 @@ int main(){
                     break;
             }
         }
+        //------------------------------------------|
         
-        xposofball = xposofball+ xfactor*xvelocity; 
-        cout <<  xfactor*xvelocity << " <--- change --->";  
-        yposofball = yposofball +yfactor*yvelocity;
+     
+        if((Game.doHit(xposofball,yposofball) == 1)) 			//if gun was hit 
+        	TurnOnGun = 1; 
+        
+        if(TurnOnGun ==1){
+        // and space bar is hit, start timer 
+        // allow shooting
+        }
+        
+        TurnOnGun = 0; 							//reset variable; 
+        
+        
         
         cout << w <<  " x = " << xposofball << " y = " << yposofball << endl;
+        
+        //userinput <> 
+        // move pad 
+        //**Game.Paddlesettings(int length change, int position change ); 
+        //space to shoot up only if something special is hit 
+        //
+        
+        
+        //update position of ball-------------------|
+        xposofball = xposofball+ xfactor*xvelocity; 
+        yposofball = yposofball +yfactor*yvelocity;
+        //------------------------------------------|
+        
+        
+        
+        
+        
+        
+        
     
     }
 

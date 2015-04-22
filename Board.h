@@ -16,8 +16,8 @@ class Board{
         void DisplayBoard();
         void Paddlesettings(int, int); 		// changes the specs of the paddle
         int Paddlecheck(int); 			// checks if ball hit paddle since the paddle is an irregular size
-	void Hit(int,int); 
-	char FindPopular(); 
+	int doHit(int,int); 			// returns important indicators ie. the shooting brick one is hit 
+	char FindPopular(); 			// returns most popular color
 	
     private:
         
@@ -69,51 +69,56 @@ char Board::FindPopular(){					  // Finds most popular color on board
 				for(int compare = 0; compare< 5; compare++){			// runs through all the colors 
 					if(PlayingBoard[j][i].getColor() == compare){	// in SHRINK COORDINATES
 						colorcount[compare]++; 
-						cout << "voila" <<endl; 
 					}
+					
 				}
 			}
 		}
 	}
-	mostpopular = 0; 
+	
+	mostpopular = 0; 						
 	for( k = 0; k<4; k++){
 		if(colorcount[k]>colorcount[k+1]){
-			mostpopular = k;
+			mostpopular = k;			//mostpopular is the array in colorcount that has the highest number
 			cout << mostpopular<<endl; 
 		}
-		else{
-			mostpopular = k+1; 
-			cout << mostpopular<<endl; 
-		}
-		cout << colorcount[k] <<endl; 
 	}
-	cout << "this is the color" << mostpopular; 
+	
 	if(mostpopular == 0)
 		return(6); 
 	else 
 		return(mostpopular); 
 }
 
-void Board::Hit(int xpos, int ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
+int Board::doHit(int xpos, int ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
 
 	switch(GetType(xpos,ypos)){
 		case 'a':					  // single brick type 
-			SetType(newx,newy,'e'); 
+			SetType(newx,newy,'e');
+			return 0;  
 			break; 
 		case 'h': 					  // double-hit brick type
-			SetType(newx,newy,'a'); 
+			SetType(newx,newy,'a');
+			return 0;  
 			break; 
 		case 'x': 
+			SetType(newx,newy,'e');
 			for(int i = 0; i<12; i++){
 				for(int j = 0; j<36; j++){
 					if(PlayingBoard[j][i].getColor() == FindPopular()){
 						SetType(i,j,'e'); 
-						//blow up multicolored one too 
 					}
 						
 				}			
 			}
+			return 0; 
+			break; 
+		case 'g': 
+			return 1; 				  // return 1 for guns should be turned on 
+			break;  
+				
 	}
+	return 0; 
 }
 
 int Board::Paddlecheck(int xpos){
@@ -123,6 +128,7 @@ int Board::Paddlecheck(int xpos){
 		else 
 			return 0; 				// ball fell into "empty space" 	
 	}
+	return 0; 
 	
 }
 
