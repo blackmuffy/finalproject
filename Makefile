@@ -1,6 +1,6 @@
 all: main
 
-main: main.cpp Board.h ObjFill.h
+main: main.cpp Board.h Brick.h
 	g++ main.cpp -o main -Wall
 
 #main.o: main.cpp
