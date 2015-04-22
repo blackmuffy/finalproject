@@ -13,6 +13,8 @@ int main(){
     double checkypos;             // "
     int xfactor = 1;                 //determines how the position of the ball changes if there is a hit
     int yfactor = -1;                 // "
+    int xvelocity = 1; 
+    int yveclovity  = 1; 
     int i;                     //which face of the ball was in contact with an object
     int face; 
 
@@ -56,8 +58,8 @@ int main(){
                     break;
             }
         }
-        xposofball = xposofball+ xfactor;  
-        yposofball = yposofball +yfactor;
+        xposofball = xposofball+ xfactor*xvelocity;  
+        yposofball = yposofball +yfactor*yveclocity;
         
         cout << w <<  " x = " << xposofball << " y = " << yposofball << endl;
     
