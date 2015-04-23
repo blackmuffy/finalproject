@@ -26,6 +26,7 @@ class Board{
 	void DrawOnWindow(int, int); 
 	void EndGame(); 
 	void readfiles(string);			// to read in level board file
+	bool quit();
 	
     private:
         
@@ -47,19 +48,29 @@ Board::Board(){                        				  // constructor
     PlayingBoard = new Brick*[36];
     for(int i = 0; i<36; i++)           			  // make an array that is 36 long
         PlayingBoard[i] = new Brick[12];      			  // make each row be 12 wide
-        
-    for(int n = 0; n<12; n++){					  // initializing board to all empty space
+    //-------------------------------------|
+
+    //INIT BOARD WITHOUT FILE -------------|    
+    /*for(int n = 0; n<12; n++){					  // initializing board to all empty space
         for(int k = 1; k <36; k++){
         	SetType(n,k,'e',1);
         }
     }
-   //-------------------------------------|
     for(int m= 0; m<12; m++){
     	SetType(m,0,'a',1);
     	SetType(m,2,'a',1); 
     	SetType(m,5,'a',1); 
-    }
-   
+    }*/
+    //------------------------------------|
+
+  // INIT BOARD WITH FILE ----------------|
+	readfiles("levels/level4.txt"); // read in level file
+	for(int n = 0; n<12; n++){		// setting type and color
+        	for(int k = 0; k <36; k++){
+        		SetType(n,k,typeVec[k][n],colorVec[k][n]);
+        	}
+  	}
+  //-------------------------------------|
     
    //PADDLE-------------------------------|			     initalizing all entire bottom row to be solid 
    for( int p = 0; p<12; p++)
@@ -84,12 +95,14 @@ void Board::DrawOnWindow(int xpos, int ypos){
 			window.placeBrick(i*50,j*25,PlayingBoard[j][i].getType(),PlayingBoard[j][i].getColor()); 
 		}
 	}
-	readfiles("levels/level1.txt"); // read in level file
-	for(int n = 0; n<12; n++){		// setting type and color
-        	for(int k = 1; k <36; k++){
-        		SetType(n,k,typeVec[k][n],colorVec[k][n]);
-        	}
-  	}
+	
+       /* for(int a = 0; a<12; a++){ // sara added all this shit in lab and it probably shouldnt be hre
+		SetType(a,0,'a',3);
+	}
+        for(int b = 0; b<12; b++){
+		SetType(b,35,'i',3);
+	}*/
+	
 	window.drawBall(xpos,ypos);
 	paddleposition = window.drawPaddle(paddleposition,2);
 	window.update(); 
@@ -246,7 +259,11 @@ void Board::readfiles(string filename){
 
 
 } // end readfiles
+bool Board::quit(){
 
+  return window.quitEvent();
+
+}
 
 #endif
 

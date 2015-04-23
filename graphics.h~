@@ -23,17 +23,13 @@ class Graphics {
 	static SDL_Surface* load(const char* file); 	// static funciton to load surface
 	bool draw(SDL_Surface*, SDL_Surface*, int, int); // static function to draw surface on another surface at specified position
 	void placeBrick(int xpos, int ypos, char type, int color);	// place the brick of type in position xpos ypos
-<<<<<<< HEAD
 	void updatebackground();
 	void update();
 	void drawBall(int, int);		// draws ball given x and y position
 	int drawPaddle(int, int);		// draws paddle given size and center position
   	void MousePosition(); 
+	bool quitEvent();	
   	
-=======
-	void background();
-	void update();
->>>>>>> a8dce38c5904dd18653d9051bf8602873b955dd0
   private:  
 
 	SDL_Window *window = NULL; // the window we'll be rendering to 
@@ -41,6 +37,7 @@ class Graphics {
 	SDL_Surface *background; //the background image for the screen surface	
 	int mouseX; 
 	int mouseY; 
+	SDL_Event e; 	// event to close window
 
 };
 
@@ -220,6 +217,19 @@ void Graphics::placeBrick(int xpos, int ypos, char type, int color){
 
 
 } // end placeBrick
+
+bool Graphics::quitEvent(){ 
+ 
+  bool quit = false;
+
+  while( SDL_PollEvent( &e) != 0){
+	if( e.type == SDL_QUIT){
+		quit = true;
+	}
+  }
+  return quit;
+
+}
 
 #endif
 

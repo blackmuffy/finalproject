@@ -33,12 +33,12 @@ int main(){
     
     //---------------------------|
     int x =1; 
+    bool Quit = false; // loop flag
     
     
     
     
-    
-    while(x){
+    while( !Quit ){
         
         for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
             checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
@@ -108,7 +108,7 @@ int main(){
    
         
         Game.DrawOnWindow(xposofball,yposofball); 
-        
+        Quit = Game.quit();
         
         //update position of ball-------------------|
         xposofball = xposofball+ xfactor*xvelocity; 

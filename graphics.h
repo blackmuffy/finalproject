@@ -28,6 +28,7 @@ class Graphics {
 	void drawBall(int, int);		// draws ball given x and y position
 	int drawPaddle(int, int);		// draws paddle given size and center position
   	void MousePosition(); 
+	bool quitEvent();	
   	
   private:  
 
@@ -36,6 +37,7 @@ class Graphics {
 	SDL_Surface *background; //the background image for the screen surface	
 	int mouseX; 
 	int mouseY; 
+	SDL_Event e; 	// event to close window
 
 };
 
@@ -55,7 +57,7 @@ Graphics::Graphics(){
 			background = SDL_LoadBMP("deep-space-2.bmp"); //load image
 			SDL_BlitSurface(background, NULL, display, NULL); // blit it to screen
 			SDL_UpdateWindowSurface( window ); // update window surface
-			SDL_Delay( 1000); //delay nine seconds
+			//SDL_Delay(1000); //delay nine seconds
 		}
 	}
 }
@@ -215,6 +217,19 @@ void Graphics::placeBrick(int xpos, int ypos, char type, int color){
 
 
 } // end placeBrick
+
+bool Graphics::quitEvent(){ 
+ 
+  bool quit = false;
+
+  while( SDL_PollEvent( &e) != 0){
+	if( e.type == SDL_QUIT){
+		quit = true;
+	}
+  }
+  return quit;
+
+}
 
 #endif
 
