@@ -21,6 +21,8 @@ class Graphics {
 	static SDL_Surface* load(const char* file); 	// static funciton to load surface
 	bool draw(SDL_Surface*, SDL_Surface*, int, int); // static function to draw surface on another surface at specified position
 	void placeBrick(int xpos, int ypos, char type, int color);	// place the brick of type in position xpos ypos
+	void background();
+	void update();
   private:  
 
 	SDL_Window *window = NULL; // the window we'll be rendering to 
@@ -49,6 +51,18 @@ Graphics::Graphics(){
 		}
 	}
 }
+
+void Graphics::background(){
+  
+  SDL_BlitSurface(background, NULL, display, NULL); // blit it to screen
+  
+} // end background 
+
+void Graphics::update(){
+
+  SDL_UpdateWindowSurface( window ); // update window surface
+
+} // end update
 
 // free media and shut down SDL at end of game 
 void Graphics::endGame(){
@@ -135,10 +149,14 @@ void Graphics::placeBrick(int xpos, int ypos, char type, int color){
 			break;
 	}
 	test = draw(display, brick, xpos, ypos);
-  	SDL_UpdateWindowSurface( window ); // update window surface
-  	SDL_Delay(3000); // won't need this later
-  	SDL_FreeSurface(brick); // free the surface from memory
+  	//SDL_UpdateWindowSurface( window ); // update window surface
+  	//SDL_Delay(3000); // won't need this later
+  	
   }
+
+  SDL_FreeSurface(brick); // free the surface from memory
+
+
 } // end placeBrick
 
 #endif
