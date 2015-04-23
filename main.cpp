@@ -38,7 +38,7 @@ int main(){
         for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
             checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
             checkypos = yposofball +radiusofball*sin(i*M_PI/2);
-            type = tester.GetType(checkxpos,checkypos); 
+            type = Game.GetType(checkxpos,checkypos); 
             if(type != 'e'){ 
                 hit = 1;
 		face = i+1;
