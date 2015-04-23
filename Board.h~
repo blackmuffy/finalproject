@@ -4,6 +4,10 @@
 #include<iostream>
 #include"Brick.h"
 #include"graphics.h"
+#include <fstream> // include fstream to read in files
+#include <cstring> // needed to use file.open
+#include <vector> // to store types and colors in 
+#include <string> // to store filename 
 
 using namespace std;
 
@@ -21,6 +25,7 @@ class Board{
 	char FindPopular(); 			// returns most popular color
 	void DrawOnWindow(int, int); 
 	void EndGame(); 
+	void readfiles(string);			// to read in level board file
 	
     private:
         
@@ -32,6 +37,8 @@ class Board{
 	int newx; 
 	int newy; 
 	Graphics window; 					  //initiate window 
+	vector< vector <char> > typeVec; // vec to store board types
+  	vector< vector <int> > colorVec; // vec to store board colors
 };
 
 Board::Board(){                        				  // constructor
@@ -77,6 +84,12 @@ void Board::DrawOnWindow(int xpos, int ypos){
 			window.placeBrick(i*50,j*25,PlayingBoard[j][i].getType(),PlayingBoard[j][i].getColor()); 
 		}
 	}
+	readfiles("levels/level1.txt"); // read in level file
+	for(int n = 0; n<12; n++){		// setting type and color
+        	for(int k = 1; k <36; k++){
+        		SetType(n,k,typeVec[k][n],colorVec[k][n]);
+        	}
+  	}
 	window.drawBall(xpos,ypos);
 	paddleposition = window.drawPaddle(paddleposition,2);
 	window.update(); 
@@ -203,6 +216,37 @@ void Board::DisplayBoard(){
         cout << endl;
     }
 }
+
+void Board::readfiles(string filename){
+
+  ifstream inFile;
+  inFile.open(filename.c_str());
+
+  // read in file
+  char tempType; // temp char to store type being read in 
+  int tempColor; // temp int to store color code being read in
+  vector<char> tempTypeVec; // temp vec to store row of types
+  vector<int> tempColorVec; // temp vec to store row of color codes
+  
+  //if(!inFile) cout << "inFile";
+  while(!inFile.eof()){ //while the file in not at the end
+	for(int i = 0; i < 12 ; i++){ // go through files, 12 bricks per row
+		inFile >> tempType >> tempColor; // take in the type and color of each element
+		tempTypeVec.push_back(tempType); // push type into temp vec
+		tempColorVec.push_back(tempColor); // push color into temp vec
+	}
+	typeVec.push_back(tempTypeVec); // push temp vec into vec
+	colorVec.push_back(tempColorVec); // """"
+	tempTypeVec.clear(); // clear the temp vec so you can push next row into
+	tempColorVec.clear(); // """"
+  }
+
+  inFile.close();
+
+
+
+} // end readfiles
+
 
 #endif
 
