@@ -13,19 +13,22 @@ class Board{
         Board();
         ~Board();
         char GetType(int, int);      
-        void SetType(int, int, char);
+        void SetType(int, int, char,int);
         void DisplayBoard();
         void Paddlesettings(int, int); 		// changes the specs of the paddle
         int Paddlecheck(int); 			// checks if ball hit paddle since the paddle is an irregular size
 	int doHit(int,int); 			// returns important indicators ie. the shooting brick one is hit 
 	char FindPopular(); 			// returns most popular color
-	void DrawOnWindow(); 
+	void DrawOnWindow(int, int); 
+	void EndGame(); 
 	
     private:
         
         Brick ** PlayingBoard;
 	int paddlelength; 
 	int paddleposition; 
+	int paddlenumber; 
+	
 	int newx; 
 	int newy; 
 	Graphics window; 					  //initiate window 
@@ -40,19 +43,22 @@ Board::Board(){                        				  // constructor
         
     for(int n = 0; n<12; n++){					  // initializing board to all empty space
         for(int k = 1; k <36; k++){
-        	SetType(n,k,'e');
+        	SetType(n,k,'e',1);
         }
     }
    //-------------------------------------|
     for(int m= 0; m<12; m++){
-    	SetType(m,34,'a');
+    	SetType(m,0,'a',1);
+    	SetType(m,2,'a',1); 
+    	SetType(m,5,'a',1); 
     }
+   
     
    //PADDLE-------------------------------|			     initalizing all entire bottom row to be solid 
    for( int p = 0; p<12; p++)
-   	SetType(p,35,'s');
-   								  // initiate normal paddle variables 
-   paddlelength = 40; 
+   	SetType(p,35,'i',1);
+    
+   paddlenumber = 2; 								  // initiate normal paddle variables 
    paddleposition = 300-paddlelength/2; 
    //-------------------------------------|
 }
@@ -60,17 +66,21 @@ Board::Board(){                        				  // constructor
 Board::~Board(){						  // deconstructor
     delete[] PlayingBoard;
 }
-
-void Board::DrawOnWindow(){
-	window.background(); 
+void Board::EndGame(){
+	window.endGame(); 
+}
+void Board::DrawOnWindow(int xpos, int ypos){
+	window.updatebackground(); 
 	
 	for(int i = 0; i<12; i++){
 		for(int j = 0; j<36; j++){
 			window.placeBrick(i*50,j*25,PlayingBoard[j][i].getType(),PlayingBoard[j][i].getColor()); 
 		}
 	}
-
-
+	window.drawBall(xpos,ypos);
+	paddleposition = window.drawPaddle(paddleposition,2);
+	window.update(); 
+	
 }
 
 char Board::FindPopular(){					  // Finds most popular color on board
@@ -82,7 +92,7 @@ char Board::FindPopular(){					  // Finds most popular color on board
 		for(int j = 0; j<36; j++){
 		
 			if(PlayingBoard[j][i].getType()=='a'){
-				cout << "here"; 
+				//cout << "here"; 
 				for(int compare = 0; compare< 5; compare++){			// runs through all the colors 
 					if(PlayingBoard[j][i].getColor() == compare){	// in SHRINK COORDINATES
 						colorcount[compare]++; 
@@ -97,7 +107,7 @@ char Board::FindPopular(){					  // Finds most popular color on board
 	for( k = 0; k<4; k++){
 		if(colorcount[k]>colorcount[k+1]){
 			mostpopular = k;			//mostpopular is the array in colorcount that has the highest number
-			cout << mostpopular<<endl; 
+			//cout << mostpopular<<endl; 
 		}
 	}
 	
@@ -108,22 +118,25 @@ char Board::FindPopular(){					  // Finds most popular color on board
 }
 
 int Board::doHit(int xpos, int ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
-
+	//cout << "here" << endl;
+	//cout << GetType(xpos,ypos) << endl; 
+	//cout << newx <<" "<<newy << endl; 
 	switch(GetType(xpos,ypos)){
 		case 'a':					  // single brick type 
-			SetType(newx,newy,'e');
+			SetType(newx,newy,'e',1);
+			cout << "A" << endl; 
 			return 0;  
 			break; 
 		case 'h': 					  // double-hit brick type
-			SetType(newx,newy,'a');
+			SetType(newx,newy,'a',1);
 			return 0;  
 			break; 
 		case 'x': 
-			SetType(newx,newy,'e');
+			SetType(newx,newy,'e',1);
 			for(int i = 0; i<12; i++){
 				for(int j = 0; j<36; j++){
 					if(PlayingBoard[j][i].getColor() == FindPopular()){
-						SetType(i,j,'e'); 
+						SetType(i,j,'e',1); 
 					}
 						
 				}			
@@ -139,11 +152,18 @@ int Board::doHit(int xpos, int ypos){				  // update the type of the spot once h
 }
 
 int Board::Paddlecheck(int xpos){
+	//cout << paddleposition<<" "<< xpos << endl; 
+	
+	if(paddlenumber == 1)
+		paddlelength = 40; 
+	if(paddlenumber == 2)
+		paddlelength = 60; 
+	if(paddlenumber == 3) 
+		paddlelength = 80; 
+		
 	for(int i = 0; i<paddlelength; i++){ 			// paddle length has to be in pixels; 
-		if((paddleposition+i)==xpos)
-			return 1; 				// ball fell paddle area 
-		else 
-			return 0; 				// ball fell into "empty space" 	
+		if((paddleposition-paddlelength/2+i)==xpos)
+			return 1; 				// ball fell paddle area 	
 	}
 	return 0; 
 	
@@ -158,19 +178,20 @@ void Board::Paddlesettings(int lengthchange,int positionchange){				//if we want
 char Board::GetType( int Xpos , int Ypos){					// IN WINDOW COORDINATES
 
     if((Xpos < 0) || (Xpos > 600) || (Ypos < 0) || (Ypos > 900)){		// ball hit wall boundaries 
-		cout << "w";       
+		//cout << "w";       
 	 return('w');
     }
     newx = (int) Xpos/50;
     newy = (int) Ypos/25;
-     
-    cout << PlayingBoard[newy][newx].getType(); 
+
+   // cout << PlayingBoard[newy][newx].getType(); 
     return(PlayingBoard[newy][newx].getType());         	 // using the objfill member function to get stored type
 
 }
 
-void Board::SetType(int Xpos, int Ypos, char type){       	 // using the objfill member function to set type in BOARD COORDINATES
+void Board::SetType(int Xpos, int Ypos, char type, int color){       	 // using the objfill member function to set type in BOARD COORDINATES
             PlayingBoard[Ypos][Xpos].setType(type);         
+            PlayingBoard[Ypos][Xpos].setColor(color);  
 }
 
 void Board::DisplayBoard(){
