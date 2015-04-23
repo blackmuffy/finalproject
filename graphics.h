@@ -6,6 +6,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <SDL2/SDL.h>	// use SDL for the graphics
+#include <sstream> 
+
 using namespace std;
 
 //Screen dimension constants
@@ -21,19 +23,25 @@ class Graphics {
 	static SDL_Surface* load(const char* file); 	// static funciton to load surface
 	bool draw(SDL_Surface*, SDL_Surface*, int, int); // static function to draw surface on another surface at specified position
 	void placeBrick(int xpos, int ypos, char type, int color);	// place the brick of type in position xpos ypos
-	void background();
+	void updatebackground();
 	void update();
+	void drawBall(int, int);		// draws ball given x and y position
+	int drawPaddle(int, int);		// draws paddle given size and center position
+  	void MousePosition(); 
+  	
   private:  
 
 	SDL_Window *window = NULL; // the window we'll be rendering to 
 	SDL_Surface *display = NULL; // the surface contained by the window
 	SDL_Surface *background; //the background image for the screen surface	
-
+	int mouseX; 
+	int mouseY; 
 
 };
 
 // constructor to start up sdl and create window with space background
 Graphics::Graphics(){
+
 
   if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
 		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -47,12 +55,61 @@ Graphics::Graphics(){
 			background = SDL_LoadBMP("deep-space-2.bmp"); //load image
 			SDL_BlitSurface(background, NULL, display, NULL); // blit it to screen
 			SDL_UpdateWindowSurface( window ); // update window surface
-			SDL_Delay( 1000 ); //delay nine seconds
+			SDL_Delay( 1000); //delay nine seconds
 		}
 	}
 }
+void Graphics::MousePosition(){
+	SDL_Event event; 
+	SDL_WaitEventTimeout(&event,0); 
+	switch (event.type){
+		case SDL_MOUSEMOTION:
+			 mouseX = event.motion.x;
+			 mouseY = event.motion.y; 
+	}
+}
 
-void Graphics::background(){
+void Graphics::drawBall(int xpos, int ypos){
+	SDL_Surface* ball = load("bricks/ball.bmp"); 
+	SDL_Rect destRect;
+	destRect.x = xpos-8; 
+	destRect.y = ypos-8;
+	destRect.h = 16; 
+	destRect.w = 16; 
+	SDL_BlitSurface(ball,NULL,display,&destRect);
+}
+int Graphics::drawPaddle(int xpos,int size){
+	MousePosition(); 
+	
+	int centeralign; 
+	if(size == 1)
+		centeralign = 20; 
+	if(size == 2)
+		centeralign = 30; 
+	if(size ==3)
+		centeralign = 40; 
+		
+	SDL_Surface* paddleS = load("bricks/padS.bmp"); 
+	SDL_Surface* paddleM = load("bricks/padM.bmp"); 
+	SDL_Surface* paddleL = load("bricks/padL.bmp"); 
+	
+	SDL_Rect destRect;
+	destRect.x = mouseX-centeralign; 	
+	destRect.y = 877; 
+	
+	if(size == 1){
+		SDL_BlitSurface(paddleS,NULL,display,&destRect);
+	}else if (size == 2){
+		SDL_BlitSurface(paddleM,NULL,display,&destRect);
+	} 
+	else if(size == 3){
+		SDL_BlitSurface(paddleL,NULL,display,&destRect);
+	}
+	return mouseX; 
+}
+
+
+void Graphics::updatebackground(){
   
   SDL_BlitSurface(background, NULL, display, NULL); // blit it to screen
   
