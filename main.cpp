@@ -6,6 +6,7 @@
 using namespace std;
 
 int main(){
+	
     //Ball variables-------------|
     
     int xposofball = 300;		//center of ball in pixel values
@@ -33,12 +34,14 @@ int main(){
     
     
     
+    
+    
     for(int w = 0; w < 310; w++){
         
         for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
             checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
             checkypos = yposofball +radiusofball*sin(i*M_PI/2);
-            type = tester.GetType(checkxpos,checkypos); 
+            type = Game.GetType(checkxpos,checkypos); 
             if(type != 'e'){ 
                 hit = 1;
 		face = i+1;
@@ -110,6 +113,7 @@ int main(){
         
     
     }
+    
 
 }
 

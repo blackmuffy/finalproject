@@ -3,6 +3,7 @@
 #define BOARD_H
 #include<iostream>
 #include"Brick.h"
+#include"graphics.h"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ class Board{
         int Paddlecheck(int); 			// checks if ball hit paddle since the paddle is an irregular size
 	int doHit(int,int); 			// returns important indicators ie. the shooting brick one is hit 
 	char FindPopular(); 			// returns most popular color
+	void DrawOnWindow(); 
 	
     private:
         
@@ -26,9 +28,11 @@ class Board{
 	int paddleposition; 
 	int newx; 
 	int newy; 
+	Graphics window; 					  //initiate window 
 };
 
 Board::Board(){                        				  // constructor
+    
     //MAIN BOARD array creation-----------|
     PlayingBoard = new Brick*[36];
     for(int i = 0; i<36; i++)           			  // make an array that is 36 long
@@ -56,6 +60,19 @@ Board::Board(){                        				  // constructor
 Board::~Board(){						  // deconstructor
     delete[] PlayingBoard;
 }
+
+void Board::DrawOnWindow(){
+	window.background(); 
+	
+	for(int i = 0; i<12; i++){
+		for(int j = 0; j<36; j++){
+			window.placeBrick(i*50,j*25,PlayingBoard[j][i].getType(),PlayingBoard[j][i].getColor()); 
+		}
+	}
+
+
+}
+
 char Board::FindPopular(){					  // Finds most popular color on board
 	int colorcount[] = {0,0,0,0,0};				  //initialize count to 0  
 	int mostpopular;  
