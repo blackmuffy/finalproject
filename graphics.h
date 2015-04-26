@@ -1,11 +1,12 @@
 /*Graphics.h defines the Grphics Class that uses SDL to produce our graphic representation of Brick Breaker*/
+/*bascially everything that needs SDL for brick breaker is contained within this class*/
 
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
 #include <iostream>
 #include <stdio.h>
-#include <SDL2/SDL.h>	// use SDL for the graphics
+#include <SDL2/SDL.h>	// use SDL for the graphics!
 #include <sstream> 
 #include <vector> 
 
@@ -42,6 +43,9 @@ class Graphics {
 	int getbulletx(int);
 	int getbullety(int); 
 	int getsizebullets();   
+	void displayHome();		// displays home screen
+	void displayLevelScreen(int); 	// displays level # screen (game over is 0)
+	
   	
   private:  
 
@@ -305,6 +309,93 @@ bool Graphics::quitEvent(){
   return quit;
 
 }
+
+void Graphics::displayLevelScreen(int level){ // to display level and game over screens for five seconds 
+  SDL_Surface *screen = NULL;
+  swithc(level){
+	case(0): //load the game over screen
+		screen = SDL_LoadBMP("screens/gameover.bmp"); //load image
+		break;
+	case(1): //load level 1 screen 
+		screen = SDL_LoadBMP("screens/level1.bmp"); //load image
+		break;
+	case(2): //load level 2 screen 
+		screen = SDL_LoadBMP("screens/level2.bmp"); //load image
+		break;
+	case(3): //load level 3 screen 
+		screen = SDL_LoadBMP("screens/level3.bmp"); //load image
+		break;
+	case(4): //load level 4 screen 
+		screen = SDL_LoadBMP("screens/level4.bmp"); //load image
+		break;
+	case(5): //load level 5 screen 
+		screen = SDL_LoadBMP("screens/level5.bmp"); //load image
+		break;
+	case(6): //load level 6 screen 
+		screen = SDL_LoadBMP("screens/level6.bmp"); //load image
+		break;
+	case(7): //load level 7 screen 
+		screen = SDL_LoadBMP("screens/level7.bmp"); //load image
+		break;
+	case(8): //load level 8 screen 
+		screen = SDL_LoadBMP("screens/level8.bmp"); //load image
+		break;
+	case(9): //load level 9 screen 
+		screen = SDL_LoadBMP("screens/level9.bmp"); //load image
+		break;
+	case(10): //load level 10 screen 
+		screen = SDL_LoadBMP("screens/level10.bmp"); //load image
+		break;
+  }
+	SDL_BlitSurface(screen, NULL, display, NULL); // blit it to screen
+	SDL_UpdateWindowSurface( window ); // update window surface
+  	SDL_Delay(5000); // display for five seconds 
+	SDL_FreeSurface(screen); //free screen surfacce
+  
+} // end displayLevelScreen
+
+void Graphics::displayHome(){ // display home page until play selected and allow user to access manual page
+	
+  SDL_Surface *home = NULL;
+  home = SDL_LoadBMP("screens/home.bmp"); // load the home page screen 
+  SDL_BlitScreen(home, NULL, display, NULL);
+  SDL_UpdateWindowSurface( window );
+
+  SDL_event *m; // mouse event 
+  bool play = false; //the user does not want to play yet
+
+  while(!play){ //while the user does not want to play
+	if( m->type == SDL_MOUSEBUTTONDOWN){ //if mouse event happen
+		// get mouse position
+		int x, y;
+		SDL_GetMouseState(&x,&y);
+		if (x >= 230 & x <= 380 & y >= 450 & y <= 520){ // if the mouse click happened in the play space
+			play = true;	
+		} else if( x >= 180 & x <= 430 & y >= 580 & y <= 650){ //if the mouse click happened in the man space
+			SDL_Surface *man = NULL;
+			man = SDL_LoadBMP("screens/manual.bmp");
+			SDL_BlitScreen(man, NULL, display, NULL); // display the manual 
+			SDL_UpdateWindowSurface( window );
+			SDL_event *o = NULL;
+			while(o.type != SDL_MOUSEBUTTONDOWN){ // wait for a mouse click to go back 
+				SDL_PollEvent(&o);
+			}
+			SDL_BlitScreen(home, NULL, display, NULL);
+			SDL_UpdateWindowSurface( window );
+			SDL_FreeSurface(man);
+		}
+	}
+  }
+
+  SDL_FreeSurface(home); //free home surface befor returning 
+  
+
+
+  } //end while(!play)
+
+  
+
+} //end displayHome
 
 #endif
 
