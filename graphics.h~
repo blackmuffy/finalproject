@@ -39,6 +39,9 @@ class Graphics {
 	void drawbullet(int,int,int,int); 
 	void deletebullet(int);
 	void updatebullet(); 
+	int getbulletx(int);
+	int getbullety(int); 
+	int getsizebullets();   
   	
   private:  
 
@@ -86,12 +89,13 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 			if(shoot == 1){
 				string key = SDL_GetKeyName(event.key.keysym.sym); 
 				if(key == "Space"){	
+					cout << "space" << endl; 
 					bullet A; 
-					A.xpos = xpos-paddlelength/2; 
-					A.ypos = ypos; 
+					A.xpos = mouseX-paddlelength/2; 
+					A.ypos = 870; 
 					bullet B; 
-					B.xpos = xpos+paddlelength/2; 
-					B.ypos = ypos; 
+					B.xpos = mouseX+paddlelength/2; 
+					B.ypos = 870; 
 					bullets.push_back(A);
 					bullets.push_back(B); 
 				}
@@ -102,11 +106,21 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 }
 void Graphics::updatebullet(){
 	int i; 
-	for(i = 0; i<bullets.size(); i++){
-		bullets[i].xpos = bullets[i].xpos+2; 	
-		bullets[i].ypos = bullets[i].ypos+2;
+	for(i = 0; i<bullets.size(); i++){	
+		bullets[i].ypos = bullets[i].ypos-2;
 	}
 }
+
+int Graphics::getbulletx(int i){
+	return(bullets[i].xpos); 
+}
+int Graphics::getbullety(int i){
+	return(bullets[i].ypos); 
+}
+int Graphics::getsizebullets(){
+	return(bullets.size()); 
+}
+
 void Graphics::deletebullet(int i){
 	bullets.erase(bullets.begin()+i); 
 }

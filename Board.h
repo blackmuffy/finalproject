@@ -27,6 +27,10 @@ class Board{
 	void EndGame(); 
 	void readfiles(string);			// to read in level board file
 	bool quit();
+	int sizeofbullets();
+	int getxbullet(int); 
+	int getybullet(int); 
+	int erasebullet(int); 
 	
     private:
         
@@ -87,6 +91,30 @@ Board::~Board(){						  // deconstructor
 void Board::EndGame(){
 	window.endGame(); 
 }
+/*
+void Board::DidBulletKill(){
+	int size = window.getsizebullets(); 
+	int x, y; 
+	for(int i = 0; i < size; i++){
+		
+		(GetType(x,y)!='e')
+	}
+}
+*/
+int Board::erasebullet(int k){
+	window.deletebullet(k);
+}
+int Board::getxbullet(int x){
+	return(window.getbulletx(x)); 
+}
+int Board::getybullet(int y){
+	return(window.getbullety(y)); 
+}
+
+int Board::sizeofbullets(){
+	return(window.getsizebullets()); 
+}
+
 void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	window.updatebackground(); 
 	
@@ -105,8 +133,11 @@ void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	
 	window.drawBall(xpos,ypos);
 	paddleposition = window.drawPaddle(paddleposition,paddlenumber);
+	
 	window.drawbullet(xpos,ypos,shoot,paddlelength); 
+	window.updatebullet(); // move position of bullets 
 	window.update(); 
+	
 	
 }
 
@@ -219,14 +250,13 @@ void Board::Paddlesettings(int positionchange){				//if we want 'easy' change wo
 
 char Board::GetType( int Xpos , int Ypos){					// IN WINDOW COORDINATES
 
-    if((Xpos < 0) || (Xpos > 600) || (Ypos < 0) || (Ypos > 900)){		// ball hit wall boundaries 
-		//cout << "w";       
+    if((Xpos < 0) || (Xpos > 600) || (Ypos < 0) || (Ypos > 900)){		// ball hit wall boundaries      
 	 return('w');
     }
     newx = (int) Xpos/50;
     newy = (int) Ypos/25;
 
-   // cout << PlayingBoard[newy][newx].getType(); 
+    
     return(PlayingBoard[newy][newx].getType());         	 // using the objfill member function to get stored type
 
 }

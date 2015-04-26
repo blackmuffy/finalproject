@@ -19,8 +19,8 @@ int main(){
     //---------movement variables|
     int xfactor = 1;			//determines how the position of the ball changes if there is a hit
     int yfactor = 1;			// "
-    int xvelocity = 2; 
-    int yvelocity  = 2; 
+    int xvelocity = 1; 
+    int yvelocity  = 1; 
     //---------------------------|
     
     //Initiate variables---------|
@@ -28,13 +28,19 @@ int main(){
     Board Game;
     //Game.DisplayBoard(); 
     char type; 
-    int shoot = 0; 
+    int shoottimer = 0; 
     int fallthrough = 0; 		// ball should continue 
     int startpadtimer = 0; 		// start 10 second counter 
     int keepgoing = 0; 			// keep counting 10 seconds for the pad to change back to normal
     int padtimer = 0; 
     int Ondefault = 0; 
     int donext = 0; 
+    int donextforbullet = 0; 
+    int keepshooting = 0; 
+    
+    char type2; 
+    int bulx; 
+    int buly; 
     //---------------------------|
     int x =1; 
     bool Quit = false; // loop flag
@@ -48,6 +54,7 @@ int main(){
             checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
             checkypos = yposofball +radiusofball*sin(i*M_PI/2);
             type = Game.GetType(checkxpos,checkypos); 
+            
             if(type != 'e'){ 
                 hit = 1;
 		face = i+1;
@@ -74,36 +81,36 @@ int main(){
             switch(face){
                 case 1:
                     xfactor = -1;
-                    //cout << "case 1";
                     break;
                 case 2:
                     yfactor = -1;
-                    //cout << "case 2";
                     break;
                 case 3:
                     xfactor = 1;
-                   // cout << "case 3";
                     break;
                 case 4:
                     yfactor = 1;
                     break;
             }
         }
-        //------------------------------------------|
-        
-     	if(hit == 1){
+        if(hit == 1){
      		donext = Game.doHit(checkxpos,checkypos); 
      		
 		if(donext == 1) 			//if gun was hit 
-			shoot = 1; 
+			shoottimer = 1; 
 		if(donext == 2){ 			
 			startpadtimer = 1;
 		}
+	
         }
         
-        if(shoot ==1){
-        // and space bar is hit, start timer 
-        // allow shooting
+        if((shoottimer == 1)||(keepshooting ==1)){
+       		shoottimer++; 
+       		keepshooting = 1; 
+       		if(shoottimer == 6000){
+       			keepshooting = 0; 
+       			shoottimer = 0; 
+       		}
         }
  
        	if((startpadtimer == 1) || (keepgoing == 1)){
@@ -114,16 +121,54 @@ int main(){
         		Game.Paddlecheck(xposofball,1); 
         		padtimer = 0; 
         	} 
-        	
         }
+	
+        //------------------------------------------|
+        //cout << Game.sizeofbullets() << endl;
+        for(int k = 0; k< Game.sizeofbullets(); k++){
+        	bulx = Game.getxbullet(k); 
+        	buly = Game.getybullet(k); 
+        	type2 = Game.GetType(bulx,buly) ; 
+        	if(type2 != 'e'){
+        		hit = 1;
+        		Game.erasebullet(k);  
+        	}
+        		
+        	if(hit == 1){
+	     		donext = Game.doHit(bulx,buly); 
+	     		
+			if(donext == 1) 			//if gun was hit 
+				shoottimer = 1; 
+			if(donext == 2){ 			
+				startpadtimer = 1;
+			}
+	
+       		}
+        
+		if(shoottimer == 1){
+	       
+		}
+ 
+	       	if((startpadtimer == 1) || (keepgoing == 1)){
+			padtimer++; 
+			keepgoing = 1; 
+			if(padtimer == 2000){
+				keepgoing = 0;
+				Game.Paddlecheck(xposofball,1); 
+				padtimer = 0; 
+			} 
+		}
+        } 
+       
+     	
         
         startpadtimer = 0; 
-        shoot = 0; 							//reset variable; 
+        //shoot = 0; 							//reset variable; 
         fallthrough = 0; 
  
    
         //Updating window//-------------------------|
-        Game.DrawOnWindow(xposofball,yposofball,shoot); 
+        Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
         Quit = Game.quit();
         //------------------------------------------|
         
