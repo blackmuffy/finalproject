@@ -16,34 +16,44 @@ class Board{
     public:
         Board();
         ~Board();
+        
+        // most important functions 
+        int doHit(int,int); 			// executes a hit 
+	void DrawOnWindow(int, int,int); 	// draw everything needed on the screen 
+        
+	// functions for features     
+        void Paddlesettings(int); 		// changes the specs of the paddle
+        int Paddlecheck(int,int); 		// checks if ball hit paddle since the paddle is an irregular size
+        char FindPopular(); 			// returns most popular color
+        int sizeofbullets();  			// interfaces with the bullets vector in graphics.h
+	int getxbullet(int); 			// get bullets[int].xpos
+	int getybullet(int); 			// get bullets[int].ypos
+	int erasebullet(int); 			// get rid of bullets[int]
+	
+	// directly interfaces with Brick.h 
         char GetType(int, int);      
         void SetType(int, int, char,int);
-        void DisplayBoard();
-        void Paddlesettings(int); 		// changes the specs of the paddle
-        int Paddlecheck(int,int); 			// checks if ball hit paddle since the paddle is an irregular size
-	int doHit(int,int); 			// returns important indicators ie. the shooting brick one is hit 
-	char FindPopular(); 			// returns most popular color
-	void DrawOnWindow(int, int,int); 
-	void EndGame(); 
+      
+
+	// set up and end functions 
 	void readfiles(string);			// to read in level board file
 	bool quit();
-	int sizeofbullets();
-	int getxbullet(int); 
-	int getybullet(int); 
-	int erasebullet(int); 
+	void EndGame(); 
+	
+	void DisplayBoard();			// unused function to display all the types of each position on the board 
 	
     private:
-        
-        Brick ** PlayingBoard;
-	int paddlelength; 
-	int paddleposition; 
-	int paddlenumber; 
+        Graphics window; 			// initiate window 
+        Brick ** PlayingBoard;			
+	int newx; 				// x position relative to board with types 
+	int newy; 				// y position relative to board with types 
 	
-	int newx; 
-	int newy; 
-	Graphics window; 					  //initiate window 
-	vector< vector <char> > typeVec; // vec to store board types
-  	vector< vector <int> > colorVec; // vec to store board colors
+	int paddlelength; 			
+	int paddleposition; 			// follows the x pos of the mouse 
+	int paddlenumber; 			// 1,2,3 = small medium and large paddles
+	
+	vector< vector <char> > typeVec; 	// vec to store board types
+  	vector< vector <int> > colorVec; 	// vec to store board colors
 };
 
 Board::Board(){                        				  // constructor
@@ -52,67 +62,24 @@ Board::Board(){                        				  // constructor
     PlayingBoard = new Brick*[36];
     for(int i = 0; i<36; i++)           			  // make an array that is 36 long
         PlayingBoard[i] = new Brick[12];      			  // make each row be 12 wide
-    //-------------------------------------|
-
-    //INIT BOARD WITHOUT FILE -------------|    
-    /*for(int n = 0; n<12; n++){					  // initializing board to all empty space
-        for(int k = 1; k <36; k++){
-        	SetType(n,k,'e',1);
+    
+    // INIT BOARD WITH FILE ---------------|
+    readfiles("levels/level1.txt"); 				  // read in level file
+    for(int n = 0; n<12; n++){					  // setting type and color
+        for(int k = 0; k <36; k++){
+        	SetType(n,k,typeVec[k][n],colorVec[k][n]);
         }
     }
-    for(int m= 0; m<12; m++){
-    	SetType(m,0,'a',1);
-    	SetType(m,2,'a',1); 
-    	SetType(m,5,'a',1); 
-    }*/
-    //------------------------------------|
 
-  // INIT BOARD WITH FILE ----------------|
-	readfiles("levels/level9.txt"); // read in level file
-	for(int n = 0; n<12; n++){		// setting type and color
-        	for(int k = 0; k <36; k++){
-        		SetType(n,k,typeVec[k][n],colorVec[k][n]);
-        	}
-  	}
-  //-------------------------------------|
-    
-   //PADDLE-------------------------------|			     initalizing all entire bottom row to be solid 
+   //PADDLE-------------------------------|			  // initalizing all entire bottom row to be solid 
    for( int p = 0; p<12; p++)
    	SetType(p,35,'i',1);
-    
-   paddlenumber = 2; 								  // initiate normal paddle variables 
-   paddleposition = 300-paddlelength/2; 
-   //-------------------------------------|
+   paddlenumber = 2; 						  // initiate normal paddle variables 
+   paddleposition = 300-paddlelength/2; 			  // and position 
 }
 
 Board::~Board(){						  // deconstructor
     delete[] PlayingBoard;
-}
-void Board::EndGame(){
-	window.endGame(); 
-}
-/*
-void Board::DidBulletKill(){
-	int size = window.getsizebullets(); 
-	int x, y; 
-	for(int i = 0; i < size; i++){
-		
-		(GetType(x,y)!='e')
-	}
-}
-*/
-int Board::erasebullet(int k){
-	window.deletebullet(k);
-}
-int Board::getxbullet(int x){
-	return(window.getbulletx(x)); 
-}
-int Board::getybullet(int y){
-	return(window.getbullety(y)); 
-}
-
-int Board::sizeofbullets(){
-	return(window.getsizebullets()); 
 }
 
 void Board::DrawOnWindow(int xpos, int ypos,int shoot){
@@ -124,54 +91,12 @@ void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 		}
 	}
 	
-       /* for(int a = 0; a<12; a++){ // sara added all this shit in lab and it probably shouldnt be hre
-		SetType(a,0,'a',3);
-	}
-        for(int b = 0; b<12; b++){
-		SetType(b,35,'i',3);
-	}*/
-	
 	window.drawBall(xpos,ypos);
 	paddleposition = window.drawPaddle(paddleposition,paddlenumber);
-	
 	window.drawbullet(xpos,ypos,shoot,paddlelength); 
 	window.updatebullet(); // move position of bullets 
 	window.update(); 
 	
-	
-}
-
-char Board::FindPopular(){					  // Finds most popular color on board
-	int colorcount[] = {0,0,0,0,0};				  //initialize count to 0  
-	int mostpopular;  
-	int k; 
-	
-	for(int i = 0; i<12; i++){
-		for(int j = 0; j<36; j++){
-		
-			if(PlayingBoard[j][i].getType()=='a'){
-				for(int compare = 0; compare< 5; compare++){			// runs through all the colors 
-					if(PlayingBoard[j][i].getColor() == compare){	// in SHRINK COORDINATES
-						colorcount[compare]++; 
-					}
-					
-				}
-			}
-		}
-	}
-	
-	mostpopular = 0; 						
-	for( k = 0; k<4; k++){
-		if(colorcount[k]>colorcount[k+1]){
-			mostpopular = k;			//mostpopular is the array in colorcount that has the highest number
-			//cout << mostpopular<<endl; 
-		}
-	}
-	cout <<"inside P:" <<mostpopular << endl; 
-	if(mostpopular == 0)
-		return(6); 
-	else 
-		return(mostpopular); 
 }
 
 int Board::doHit(int xpos, int ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
@@ -221,6 +146,41 @@ int Board::doHit(int xpos, int ypos){				  // update the type of the spot once h
 	return 0; 
 }
 
+char Board::FindPopular(){					  // Finds most popular color on board
+	int colorcount[] = {0,0,0,0,0};				  //initialize count to 0  
+	int mostpopular;  
+	int k; 
+	
+	for(int i = 0; i<12; i++){
+		for(int j = 0; j<36; j++){
+		
+			if(PlayingBoard[j][i].getType()=='a'){
+				for(int compare = 0; compare< 5; compare++){			// runs through all the colors 
+					if(PlayingBoard[j][i].getColor() == compare){	// in SHRINK COORDINATES
+						colorcount[compare]++; 
+					}
+					
+				}
+			}
+		}
+	}
+	
+	mostpopular = 0; 						
+	for( k = 0; k<4; k++){
+		if(colorcount[k]>colorcount[k+1]){
+			mostpopular = k;			//mostpopular is the array in colorcount that has the highest number
+			//cout << mostpopular<<endl; 
+		}
+	}
+	cout <<"inside P:" <<mostpopular << endl; 
+	if(mostpopular == 0)
+		return(6); 
+	else 
+		return(mostpopular); 
+}
+
+
+
 int Board::Paddlecheck(int xpos,int paddledefault){
 	
 	
@@ -247,6 +207,19 @@ void Board::Paddlesettings(int positionchange){				//if we want 'easy' change wo
 		paddleposition = paddleposition + positionchange; 				// given user input to move the paddle;   
 }
 
+int Board::erasebullet(int k){
+	window.deletebullet(k);
+}
+int Board::getxbullet(int x){
+	return(window.getbulletx(x)); 
+}
+int Board::getybullet(int y){
+	return(window.getbullety(y)); 
+}
+
+int Board::sizeofbullets(){
+	return(window.getsizebullets()); 
+}
 
 char Board::GetType( int Xpos , int Ypos){					// IN WINDOW COORDINATES
 
@@ -255,8 +228,6 @@ char Board::GetType( int Xpos , int Ypos){					// IN WINDOW COORDINATES
     }
     newx = (int) Xpos/50;
     newy = (int) Ypos/25;
-
-    
     return(PlayingBoard[newy][newx].getType());         	 // using the objfill member function to get stored type
 
 }
@@ -266,15 +237,7 @@ void Board::SetType(int Xpos, int Ypos, char type, int color){       	 // using 
             PlayingBoard[Ypos][Xpos].setColor(color);  
 }
 
-void Board::DisplayBoard(){
 
-    for(int i = 0; i<36; i++){
-        for(int j = 0; j< 12; j++){
-            cout << PlayingBoard[i][j].getType();        	 // displaying the type
-        }
-        cout << endl;
-    }
-}
 
 void Board::readfiles(string filename){
 
@@ -305,11 +268,27 @@ void Board::readfiles(string filename){
 
 
 } // end readfiles
+
 bool Board::quit(){
 
   return window.quitEvent();
-
+  
 }
+void Board::EndGame(){
+  window.endGame(); 
+}
+
+void Board::DisplayBoard(){
+
+    for(int i = 0; i<36; i++){
+        for(int j = 0; j< 12; j++){
+            cout << PlayingBoard[i][j].getType();        	 // displaying the type
+        }
+        cout << endl;
+    }
+}
+
+
 
 #endif
 
