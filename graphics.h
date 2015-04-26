@@ -89,12 +89,11 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 			if(shoot == 1){
 				string key = SDL_GetKeyName(event.key.keysym.sym); 
 				if(key == "Space"){	
-					cout << "space" << endl; 
 					bullet A; 
-					A.xpos = mouseX-paddlelength/2; 
+					A.xpos = mouseX-paddlelength/2-2; 
 					A.ypos = 870; 
 					bullet B; 
-					B.xpos = mouseX+paddlelength/2; 
+					B.xpos = mouseX+paddlelength/2-2; 
 					B.ypos = 870; 
 					bullets.push_back(A);
 					bullets.push_back(B); 
