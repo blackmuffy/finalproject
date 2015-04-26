@@ -19,11 +19,11 @@ class Board{
         char GetType(int, int);      
         void SetType(int, int, char,int);
         void DisplayBoard();
-        void Paddlesettings(int, int); 		// changes the specs of the paddle
-        int Paddlecheck(int); 			// checks if ball hit paddle since the paddle is an irregular size
+        void Paddlesettings(int); 		// changes the specs of the paddle
+        int Paddlecheck(int,int); 			// checks if ball hit paddle since the paddle is an irregular size
 	int doHit(int,int); 			// returns important indicators ie. the shooting brick one is hit 
 	char FindPopular(); 			// returns most popular color
-	void DrawOnWindow(int, int); 
+	void DrawOnWindow(int, int,int); 
 	void EndGame(); 
 	void readfiles(string);			// to read in level board file
 	bool quit();
@@ -64,7 +64,7 @@ Board::Board(){                        				  // constructor
     //------------------------------------|
 
   // INIT BOARD WITH FILE ----------------|
-	readfiles("levels/level3.txt"); // read in level file
+	readfiles("levels/level1.txt"); // read in level file
 	for(int n = 0; n<12; n++){		// setting type and color
         	for(int k = 0; k <36; k++){
         		SetType(n,k,typeVec[k][n],colorVec[k][n]);
@@ -87,7 +87,7 @@ Board::~Board(){						  // deconstructor
 void Board::EndGame(){
 	window.endGame(); 
 }
-void Board::DrawOnWindow(int xpos, int ypos){
+void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	window.updatebackground(); 
 	
 	for(int i = 0; i<12; i++){
@@ -104,7 +104,8 @@ void Board::DrawOnWindow(int xpos, int ypos){
 	}*/
 	
 	window.drawBall(xpos,ypos);
-	paddleposition = window.drawPaddle(paddleposition,2);
+	paddleposition = window.drawPaddle(paddleposition,paddlenumber);
+	WaitEvent(shoot,xpos,ypos,paddlelength); 
 	window.update(); 
 	
 }
@@ -118,7 +119,6 @@ char Board::FindPopular(){					  // Finds most popular color on board
 		for(int j = 0; j<36; j++){
 		
 			if(PlayingBoard[j][i].getType()=='a'){
-				//cout << "here"; 
 				for(int compare = 0; compare< 5; compare++){			// runs through all the colors 
 					if(PlayingBoard[j][i].getColor() == compare){	// in SHRINK COORDINATES
 						colorcount[compare]++; 
@@ -136,7 +136,7 @@ char Board::FindPopular(){					  // Finds most popular color on board
 			//cout << mostpopular<<endl; 
 		}
 	}
-	
+	cout <<"inside P:" <<mostpopular << endl; 
 	if(mostpopular == 0)
 		return(6); 
 	else 
@@ -144,9 +144,8 @@ char Board::FindPopular(){					  // Finds most popular color on board
 }
 
 int Board::doHit(int xpos, int ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
-	//cout << "here" << endl;
-	//cout << GetType(xpos,ypos) << endl; 
-	//cout << newx <<" "<<newy << endl; 
+	int set; 
+	
 	switch(GetType(xpos,ypos)){
 		case 'a':					  // single brick type 
 			SetType(newx,newy,'e',1);
@@ -155,13 +154,17 @@ int Board::doHit(int xpos, int ypos){				  // update the type of the spot once h
 			break; 
 		case 'h': 					  // double-hit brick type
 			SetType(newx,newy,'a',1);
+			cout << "hit double" << endl; 
 			return 0;  
 			break; 
 		case 'x': 
+			cout << "special hit" << endl; 
+			cout << FindPopular()<< endl; 
 			SetType(newx,newy,'e',1);
+			set = FindPopular(); 
 			for(int i = 0; i<12; i++){
 				for(int j = 0; j<36; j++){
-					if(PlayingBoard[j][i].getColor() == FindPopular()){
+					if(PlayingBoard[j][i].getColor() == set){
 						SetType(i,j,'e',1); 
 					}
 						
@@ -170,15 +173,29 @@ int Board::doHit(int xpos, int ypos){				  // update the type of the spot once h
 			return 0; 
 			break; 
 		case 'g': 
+			SetType(newx,newy,'e',1);
 			return 1; 				  // return 1 for guns should be turned on 
 			break;  
-				
+		case 'l':
+			paddlenumber = 3; 
+			SetType(newx,newy,'e',1);
+			return 2; 
+			break; 
+		case 'm': 
+			paddlenumber = 1; 
+			SetType(newx,newy,'e',1);
+			return 2; 
+			break; 	
 	}
 	return 0; 
 }
 
-int Board::Paddlecheck(int xpos){
-	//cout << paddleposition<<" "<< xpos << endl; 
+int Board::Paddlecheck(int xpos,int paddledefault){
+	
+	
+	if(paddledefault == 1){
+		paddlenumber = 2; 
+	}
 	
 	if(paddlenumber == 1)
 		paddlelength = 40; 
@@ -195,8 +212,7 @@ int Board::Paddlecheck(int xpos){
 	
 }
 
-void Board::Paddlesettings(int lengthchange,int positionchange){				//if we want 'easy' change would = 20, if we want hard 'change would = -20
-		paddlelength = paddlelength + lengthchange;
+void Board::Paddlesettings(int positionchange){				//if we want 'easy' change would = 20, if we want hard 'change would = -20
 		paddleposition = paddleposition + positionchange; 				// given user input to move the paddle;   
 }
 

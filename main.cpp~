@@ -19,8 +19,8 @@ int main(){
     //---------movement variables|
     int xfactor = 1;			//determines how the position of the ball changes if there is a hit
     int yfactor = 1;			// "
-    int xvelocity = 3; 
-    int yvelocity  = 3; 
+    int xvelocity = 2; 
+    int yvelocity  = 2; 
     //---------------------------|
     
     //Initiate variables---------|
@@ -28,9 +28,13 @@ int main(){
     Board Game;
     //Game.DisplayBoard(); 
     char type; 
-    int TurnOnGun = 0; 
+    int shoot = 0; 
     int fallthrough = 0; 		// ball should continue 
-    
+    int startpadtimer = 0; 		// start 10 second counter 
+    int keepgoing = 0; 			// keep counting 10 seconds for the pad to change back to normal
+    int padtimer = 0; 
+    int Ondefault = 0; 
+    int donext = 0; 
     //---------------------------|
     int x =1; 
     bool Quit = false; // loop flag
@@ -55,9 +59,13 @@ int main(){
         if(type == 'i'){
         	fallthrough = 1; 
         	//x = 0; 
-        	if(Game.Paddlecheck(xposofball)==1){
+        	if(keepgoing == 1)
+        		Ondefault = 0; 
+        	else
+        		Ondefault = 1; 
+        	if(Game.Paddlecheck(xposofball,Ondefault)==1){
         		fallthrough = 0;
-        	cout << "BOUNCEYA"<< endl;  
+        		cout << "BOUNCEYA"<< endl;  
        		}
         }   
        
@@ -78,37 +86,46 @@ int main(){
                     break;
                 case 4:
                     yfactor = 1;
-           
-                    cout << "case 4";
                     break;
             }
         }
         //------------------------------------------|
         
      	if(hit == 1){
-		if((Game.doHit(checkxpos,checkypos) == 1)) 			//if gun was hit 
-			TurnOnGun = 1; 
+     		donext = Game.doHit(checkxpos,checkypos); 
+     		
+		if(donext == 1) 			//if gun was hit 
+			shoot = 1; 
+		if(donext == 2){ 			
+			startpadtimer = 1;
+		}
         }
-        if(TurnOnGun ==1){
+        
+        if(shoot ==1){
         // and space bar is hit, start timer 
         // allow shooting
         }
+ 
+       	if((startpadtimer == 1) || (keepgoing == 1)){
+        	padtimer++; 
+        	keepgoing = 1; 
+        	if(padtimer == 2000){
+        		keepgoing = 0;
+        		Game.Paddlecheck(xposofball,1); 
+        		padtimer = 0; 
+        	} 
+        	
+        }
         
-        TurnOnGun = 0; 							//reset variable; 
+        startpadtimer = 0; 
+        shoot = 0; 							//reset variable; 
         fallthrough = 0; 
-        
-        
-        //cout << w <<  " x = " << xposofball << " y = " << yposofball << endl;
-        
-        //userinput <> 
-        // move pad 
-        //**Game.Paddlesettings(int length change, int position change ); 
-        //space to shoot up only if something special is hit 
-        //
+ 
    
-        
-        Game.DrawOnWindow(xposofball,yposofball); 
+        //Updating window//-------------------------|
+        Game.DrawOnWindow(xposofball,yposofball,shoot); 
         Quit = Game.quit();
+        //------------------------------------------|
         
         //update position of ball-------------------|
         xposofball = xposofball+ xfactor*xvelocity; 

@@ -10,6 +10,9 @@ specifies the type of brick that files each grid space*/
 	's' --> solid bricks never get destroyed
 	'x' --> delete all bricks of most popular color;
 	'g' --> give shooting powers to pad;  
+	'm' --> minipaddle; 
+	'd' --> default paddle 
+	'l' --> large paddle
 */
 
 #ifndef BRICK_H

@@ -7,12 +7,19 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>	// use SDL for the graphics
 #include <sstream> 
+#include <vector> 
 
 using namespace std;
 
 //Screen dimension constants
 #define SCREEN_WIDTH	600
 #define SCREEN_HEIGHT	900
+
+struct bullet {
+	int xpos; 
+	int ypos; 
+	
+}; 
 
 class Graphics {
 
@@ -27,8 +34,11 @@ class Graphics {
 	void update();
 	void drawBall(int, int);		// draws ball given x and y position
 	int drawPaddle(int, int);		// draws paddle given size and center position
-  	void MousePosition(); 
+  	void WaitEvent(int, int, int,int); 
 	bool quitEvent();	
+	void drawbullet(int,int,int,int); 
+	void deletebullet(int);
+	void updatebullet(); 
   	
   private:  
 
@@ -38,8 +48,11 @@ class Graphics {
 	int mouseX; 
 	int mouseY; 
 	SDL_Event e; 	// event to close window
+	vector <bullet> bullets; 
 
 };
+
+
 
 // constructor to start up sdl and create window with space background
 Graphics::Graphics(){
@@ -57,20 +70,61 @@ Graphics::Graphics(){
 			background = SDL_LoadBMP("deep-space-2.bmp"); //load image
 			SDL_BlitSurface(background, NULL, display, NULL); // blit it to screen
 			SDL_UpdateWindowSurface( window ); // update window surface
-			SDL_Delay( 1000); //delay nine seconds
+			//SDL_Delay(1000); //delay nine seconds
 		}
 	}
 }
-void Graphics::MousePosition(){
+void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 	SDL_Event event; 
 	SDL_WaitEventTimeout(&event,0); 
 	switch (event.type){
 		case SDL_MOUSEMOTION:
 			 mouseX = event.motion.x;
 			 mouseY = event.motion.y; 
+			 break; 
+		case SDL_KEYDOWN:
+			if(shoot == 1){
+				string key = SDL_GetKeyName(event.key.keysym.sym); 
+				if(key == "Space"){	
+					bullet A; 
+					A.xpos = xpos-paddlelength/2; 
+					A.ypos = ypos; 
+					bullet B; 
+					B.xpos = xpos+paddlelength/2; 
+					B.ypos = ypos; 
+					bullets.push_back(A);
+					bullets.push_back(B); 
+				}
+			}
+				
+			break; 
 	}
 }
+void Graphics::updatebullet(){
+	int i; 
+	for(i = 0; i<bullets.size(); i++){
+		bullets[i].xpos = bullets[i].xpos+2; 	
+		bullets[i].ypos = bullets[i].ypos+2;
+	}
+}
+void Graphics::deletebullet(int i){
+	bullets.erase(bullets.begin()+i); 
+}
 
+void Graphics::drawbullet
+(int xpos, int ypos,int shoot,int paddlelength){
+	WaitEvent(shoot,xpos,ypos,paddlelength);
+	int i; 
+	SDL_Surface* bullet = load("bricks/bullet.bmp"); 
+	SDL_Rect destRect;
+	for(i = 0; i<bullets.size(); i++){
+		destRect.x = bullets[i].xpos; 
+		destRect.y = bullets[i].ypos;
+		SDL_BlitSurface(bullet,NULL,display,&destRect);
+	}
+	
+	
+}
 void Graphics::drawBall(int xpos, int ypos){
 	SDL_Surface* ball = load("bricks/ball.bmp"); 
 	SDL_Rect destRect;
@@ -81,8 +135,6 @@ void Graphics::drawBall(int xpos, int ypos){
 	SDL_BlitSurface(ball,NULL,display,&destRect);
 }
 int Graphics::drawPaddle(int xpos,int size){
-	MousePosition(); 
-	
 	int centeralign; 
 	if(size == 1)
 		centeralign = 20; 
