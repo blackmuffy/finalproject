@@ -272,6 +272,15 @@ void Graphics::placeBrick(int xpos, int ypos, char type, int color){
 		case 'g':
 			brick = load("bricks/brickg.bmp");	// load brick g
 			break;
+		case 'l':
+			brick = load("bricks/brickl.bmp");	// load brick l
+			break;
+		case 'm':
+			brick = load("bricks/brickm.bmp");	// load brick m
+			break;
+		case 'p':
+			brick = load("bricks/brickp.bmp");	// load brick p
+			break;
 	}
 	test = draw(display, brick, xpos, ypos);
   	//SDL_UpdateWindowSurface( window ); // update window surface
