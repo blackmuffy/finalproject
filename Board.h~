@@ -19,7 +19,7 @@ class Board{
         
         // most important functions 
         int doHit(int,int); 			// executes a hit 
-	void DrawOnWindow(int, int,int); 	// draw everything needed on the screen 
+	void DrawOnWindow(int, int,int,int); 	// draw everything needed on the screen 
         
 	// functions for features     
         void Paddlesettings(int); 		// changes the specs of the paddle
@@ -39,10 +39,12 @@ class Board{
 	void readfiles(string);			// to read in level board file
 	bool quit();
 	void EndGame(); 
+	int StartGame(); 
 	
 	void DisplayBoard();			// unused function to display all the types of each position on the board 
 	void DisplayLevelScreen(int);		// display level or game over screen 
 	bool DisplayHome();			// display home screen and access man page
+	
 	
     private:
         Graphics window; 			// initiate window 
@@ -83,8 +85,10 @@ Board::Board(){                        				  // constructor
 Board::~Board(){						  // deconstructor
     delete[] PlayingBoard;
 }
-
-void Board::DrawOnWindow(int xpos, int ypos,int shoot){
+int Board::StartGame(){
+	return window.WaitforClick(); 
+}
+void Board::DrawOnWindow(int xpos, int ypos,int shoot,int paddlehold){
 	window.updatebackground(); 
 	
 	for(int i = 0; i<12; i++){
