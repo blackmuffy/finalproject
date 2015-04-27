@@ -294,8 +294,8 @@ void Board::DisplayLevelScreen(int level){
   window.displayLevelScreen(level);
 }
 
-void Board::DisplayHome(){
-  window.displayHome();
+bool Board::DisplayHome(){
+  return window.displayHome();
 }
 
 #endif

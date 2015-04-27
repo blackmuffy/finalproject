@@ -39,10 +39,12 @@ class Board{
 	void readfiles(string);			// to read in level board file
 	bool quit();
 	void EndGame(); 
+	int StartGame(); 
 	
 	void DisplayBoard();			// unused function to display all the types of each position on the board 
 	void DisplayLevelScreen(int);		// display level or game over screen 
 	bool DisplayHome();			// display home screen and access man page
+	
 	
     private:
         Graphics window; 			// initiate window 
@@ -83,7 +85,9 @@ Board::Board(){                        				  // constructor
 Board::~Board(){						  // deconstructor
     delete[] PlayingBoard;
 }
-
+int Board::StartGame(){
+	return window.WaitforClick(); 
+}
 void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	window.updatebackground(); 
 	

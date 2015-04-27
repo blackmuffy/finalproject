@@ -45,6 +45,7 @@ class Graphics {
 	int getsizebullets();   
 	bool displayHome();		// displays home screen
 	void displayLevelScreen(int); 	// displays level # screen (game over is 0)
+	int WaitforClick(); 
 	
   	
   private:  
@@ -80,6 +81,15 @@ Graphics::Graphics(){
 			//SDL_Delay(1000); //delay nine seconds
 		}
 	}
+}
+int Graphics::WaitforClick(){
+	SDL_Event event; 
+	SDL_WaitEvent(&event);
+	switch(event.type){
+		case SDL_MOUSEBUTTONDOWN: 
+			return 1;  
+	}
+	return 0; 
 }
 void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 	SDL_Event event; 
@@ -366,12 +376,13 @@ bool Graphics::displayHome(){ // display home page until play selected and allow
   while(!play){ //while the user does not want to play
 	//quit = quitEvent();
 	if ( quitEvent() ) return true;
-	SDL_PollEvent(&m); // see if there was an event 
+	SDL_WaitEvent(&m); // see if there was an event 
 	if( m.type == SDL_MOUSEBUTTONDOWN){ //if mouse event happen
 		// get mouse position
 		int x, y;
 		SDL_GetMouseState(&x,&y);
 		if (x >= 230 & x <= 380 & y >= 450 & y <= 520){ // if the mouse click happened in the play space
+			cout << "TRUE" << endl; 
 			play = true;	
 		} else if( x >= 180 & x <= 430 & y >= 580 & y <= 650){ //if the mouse click happened in the man space
 			SDL_Surface *man = NULL;
@@ -381,7 +392,7 @@ bool Graphics::displayHome(){ // display home page until play selected and allow
 			SDL_Event o;
 			bool exitMan = false;
 			while(!exitMan){
-				if(SDL_PollEvent(&o)!=0){
+				if(SDL_WaitEvent(&o)!=0)
 					if(o.type == SDL_MOUSEBUTTONDOWN) exitMan = true;					
 				if ( quitEvent() ) return true;
 			}

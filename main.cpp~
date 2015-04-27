@@ -10,7 +10,7 @@ int main(){
     //Ball variables-------------|
     
     int xposofball = 300;		//center of ball in pixel values
-    int yposofball = 400;		// "
+    int yposofball = 870;		// "
     int checkxpos;			// which of the 4 parts of the ball is hit
     int checkypos;			// "
     int i;				//which face of the ball was in contact with an object
@@ -51,10 +51,23 @@ int main(){
     
     bool Quit = false; 			// loop flag
     bool something = false;
+    int hold = 0; 
     
-  Quit = Game.DisplayHome();
+  Quit = Game.DisplayHome(); int start = Game.StartGame(); 
       //MAIN LOOP-----------------|
+
   while( !Quit ){
+  while((start != 1) && (hold < 2) ){
+  	start = Game.StartGame(); 
+  }; 
+  if(start == 1)
+  	hold++;
+  start = 0;  
+   
+  cout << start << endl; 	 
+  cout << "hello"<< endl; 
+  
+  
   //Quit = Game.DisplayHome();	
   //Game.DisplayHome(); // display home page
   //while(!something){
