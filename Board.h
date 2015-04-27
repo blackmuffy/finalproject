@@ -41,6 +41,8 @@ class Board{
 	void EndGame(); 
 	
 	void DisplayBoard();			// unused function to display all the types of each position on the board 
+	void DisplayLevelScreen(int);		// display level or game over screen 
+	bool DisplayHome();			// display home screen and access man page
 	
     private:
         Graphics window; 			// initiate window 
@@ -288,7 +290,13 @@ void Board::DisplayBoard(){
     }
 }
 
+void Board::DisplayLevelScreen(int level){
+  window.displayLevelScreen(level);
+}
 
+bool Board::DisplayHome(){
+  return window.displayHome();
+}
 
 #endif
 

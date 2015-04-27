@@ -50,11 +50,14 @@ int main(){
     Board Game;
     
     bool Quit = false; 			// loop flag
+    bool something = false;
     
-    
-    
-    //MAIN LOOP-----------------|
-    while( !Quit ){
+  Quit = Game.DisplayHome();
+      //MAIN LOOP-----------------|
+  while( !Quit ){
+  //Quit = Game.DisplayHome();	
+  //Game.DisplayHome(); // display home page
+  //while(!something){
         
         //SEE IF ANY PART OF THE BALL WAS HIT-------|
         for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
@@ -169,8 +172,9 @@ int main(){
         xposofball = xposofball+ xfactor*xvelocity; 
         yposofball = yposofball +yfactor*yvelocity;
 
+  //} // while !something
     
-    }
+} // while !quit
     
       Game.EndGame(); 
 

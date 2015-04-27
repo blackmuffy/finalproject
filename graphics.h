@@ -43,7 +43,7 @@ class Graphics {
 	int getbulletx(int);
 	int getbullety(int); 
 	int getsizebullets();   
-	void displayHome();		// displays home screen
+	bool displayHome();		// displays home screen
 	void displayLevelScreen(int); 	// displays level # screen (game over is 0)
 	
   	
@@ -93,11 +93,12 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 			if(shoot == 1){
 				string key = SDL_GetKeyName(event.key.keysym.sym); 
 				if(key == "Space"){	
+					cout << "space" << endl; 
 					bullet A; 
-					A.xpos = mouseX-paddlelength/2-2; 
+					A.xpos = mouseX-paddlelength/2; 
 					A.ypos = 870; 
 					bullet B; 
-					B.xpos = mouseX+paddlelength/2-2; 
+					B.xpos = mouseX+paddlelength/2; 
 					B.ypos = 870; 
 					bullets.push_back(A);
 					bullets.push_back(B); 
@@ -311,7 +312,7 @@ bool Graphics::quitEvent(){
 
 void Graphics::displayLevelScreen(int level){ // to display level and game over screens for five seconds 
   SDL_Surface *screen = NULL;
-  swithc(level){
+  switch(level){
 	case(0): //load the game over screen
 		screen = SDL_LoadBMP("screens/gameover.bmp"); //load image
 		break;
@@ -353,18 +354,20 @@ void Graphics::displayLevelScreen(int level){ // to display level and game over 
   
 } // end displayLevelScreen
 
-void Graphics::displayHome(){ // display home page until play selected and allow user to access manual page
+bool Graphics::displayHome(){ // display home page until play selected and allow user to access manual page
 	
   SDL_Surface *home = NULL;
   home = SDL_LoadBMP("screens/home.bmp"); // load the home page screen 
-  SDL_BlitScreen(home, NULL, display, NULL);
+  SDL_BlitSurface(home, NULL, display, NULL);
   SDL_UpdateWindowSurface( window );
 
-  SDL_event *m; // mouse event 
+  SDL_Event m; // mouse event 
   bool play = false; //the user does not want to play yet
-
   while(!play){ //while the user does not want to play
-	if( m->type == SDL_MOUSEBUTTONDOWN){ //if mouse event happen
+	//quit = quitEvent();
+	if ( quitEvent() ) return true;
+	SDL_PollEvent(&m); // see if there was an event 
+	if( m.type == SDL_MOUSEBUTTONDOWN){ //if mouse event happen
 		// get mouse position
 		int x, y;
 		SDL_GetMouseState(&x,&y);
@@ -373,26 +376,24 @@ void Graphics::displayHome(){ // display home page until play selected and allow
 		} else if( x >= 180 & x <= 430 & y >= 580 & y <= 650){ //if the mouse click happened in the man space
 			SDL_Surface *man = NULL;
 			man = SDL_LoadBMP("screens/manual.bmp");
-			SDL_BlitScreen(man, NULL, display, NULL); // display the manual 
+			SDL_BlitSurface(man, NULL, display, NULL); // display the manual 
 			SDL_UpdateWindowSurface( window );
-			SDL_event *o = NULL;
-			while(o.type != SDL_MOUSEBUTTONDOWN){ // wait for a mouse click to go back 
-				SDL_PollEvent(&o);
+			SDL_Event o;
+			bool exitMan = false;
+			while(!exitMan){
+				if(SDL_PollEvent(&o)!=0){
+					if(o.type == SDL_MOUSEBUTTONDOWN) exitMan = true;					
+				if ( quitEvent() ) return true;
 			}
-			SDL_BlitScreen(home, NULL, display, NULL);
+			SDL_BlitSurface(home, NULL, display, NULL);
 			SDL_UpdateWindowSurface( window );
 			SDL_FreeSurface(man);
 		}
-	}
-  }
+	} // end if m->type
+  }//end while(!play)
 
-  SDL_FreeSurface(home); //free home surface befor returning 
-  
-
-
-  } //end while(!play)
-
-  
+  SDL_FreeSurface(home); //free home surface befor returning  
+  return false; 
 
 } //end displayHome
 
