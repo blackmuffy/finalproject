@@ -50,10 +50,7 @@ class Graphics {
 	bool displayHome();		// displays home screen
 	void displayLevelScreen(int); 	// displays level # screen (game over is 0)
 	int WaitforClick(); 
-	void drawscore(int); 
-	SDL_Texture* renderText(const string &message, const string &fontFile, SDL_Color color, int fontSize, SDL_Renderer *renderer);
-	void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y); 
-  	void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h); 
+	//void drawscore(int); 
   	
   private:  
 
@@ -125,33 +122,9 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 			break; 
 	}
 }
-SDL_Texture* Graphics::renderText(const string &message, const string &fontFile, SDL_Color color, int fontSize, SDL_Renderer *renderer){
-	TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize); 
-	SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), color); 
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer,surf); 
-	SDL_FreeSurface(surf); 
-	TTF_CloseFont(font); 
-	if(texture == 0){
-		cout << "Error"<<endl; 
-	}
-	return texture; 
-}
-void Graphics::renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h){
 
-	SDL_Rect dst; 
-	dst.x = x; 
-	dst.y = y; 
-	dst.w =w; 
-	dst.h = h; 
-	SDL_RenderCopy(ren,tex,NULL,&dst); 
-}
-void Graphics::renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y){
-	int w, h; 
-	SDL_QueryTexture(tex,NULL,NULL,&w,&h); 
-	renderTexture(tex,ren,x,y,w,h); 
-}
 
-void Graphics::drawscore(int score){
+/*void Graphics::drawscore(int score){
 	TTF_Init(); 
 	SDL_Renderer *renderer = NULL; 
 	TTF_Font* Font = TTF_OpenFont("bebas.TTF",15); 
@@ -170,7 +143,7 @@ void Graphics::drawscore(int score){
 	
 	//SDL_DestroyTexture(Message); 
 	
-}
+}*/
 void Graphics::updatebullet(){
 	int i; 
 	for(i = 0; i<bullets.size(); i++){	
