@@ -9,6 +9,9 @@
 #include <SDL2/SDL.h>	// use SDL for the graphics!
 #include <sstream> 
 #include <vector> 
+#include <string> 
+//#include <SDL_ttf.h> 
+//#include <SDL_image.h> 
 
 using namespace std;
 
@@ -57,7 +60,19 @@ class Graphics {
 	int mouseY; 
 	SDL_Event e; 	// event to close window
 	vector <bullet> bullets; 
-
+	/*SDL_Renderer* renderer
+	int screenWidth, screenHeight; 
+	SDL_Rect display Rect; 
+	SDL_Texture *background; 
+	SDL_Rect rectBackground;  
+	TTF_Font *font; 
+	SDL_Surface *message; 
+	SDL_Texture *text; 
+	SDL_Rect textRect; 
+	SDL_Color textColor; 
+	string data; 
+	bool typing; 
+	*/
 };
 
 
@@ -97,19 +112,20 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 	switch (event.type){
 		case SDL_MOUSEMOTION:
 			 mouseX = event.motion.x;
+			 /*if( mouseX < paddlelength/2) mouseX = paddlelength/2;
+			 if( mouseX > 600-paddlelength/2) mouseX = 600-paddlelength/2;*/
 			 mouseY = event.motion.y; 
 			 break; 
 		case SDL_KEYDOWN:
 			if(shoot == 1){
 				string key = SDL_GetKeyName(event.key.keysym.sym); 
-				if(key == "Space"){	
-					cout << "space" << endl; 
+				if(key == "Space"){
 					bullet A; 
 					A.xpos = mouseX-paddlelength/2; 
-					A.ypos = 870; 
+					A.ypos = 820; 
 					bullet B; 
 					B.xpos = mouseX+paddlelength/2; 
-					B.ypos = 870; 
+					B.ypos = 820; 
 					bullets.push_back(A);
 					bullets.push_back(B); 
 				}
@@ -117,6 +133,21 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 				
 			break; 
 	}
+}
+void Graphics::drawscore(int score){
+	
+	/*gfont = TTF_OpenFont("bricks/bebas.ttf",30); 
+	if( gFont == NULL)
+	{
+		printf("failed to load font"); 
+	
+	}
+	else 
+	{	SDL_Color textColor = {0,0,0}; 
+		if(!gTextTexture.loadFromRenderedText("hello",textcolor); 
+	}
+	*/
+
 }
 void Graphics::updatebullet(){
 	int i; 
@@ -154,7 +185,7 @@ void Graphics::drawbullet
 	
 }
 void Graphics::drawBall(int xpos, int ypos){
-	SDL_Surface* ball = load("bricks/ball.bmp"); 
+	SDL_Surface* ball = load("bricks/ball3.bmp"); 
 	SDL_Rect destRect;
 	destRect.x = xpos-8; 
 	destRect.y = ypos-8;
@@ -177,7 +208,7 @@ int Graphics::drawPaddle(int xpos,int size){
 	
 	SDL_Rect destRect;
 	destRect.x = mouseX-centeralign; 	
-	destRect.y = 877; 
+	destRect.y = 827; 
 	
 	if(size == 1){
 		SDL_BlitSurface(paddleS,NULL,display,&destRect);
@@ -215,7 +246,7 @@ void Graphics::endGame(){
 } // end endGame
 
 // static funcition to load surface
-SDL_Surface* Graphics::load(const char* File) {
+  SDL_Surface* Graphics::load(const char* File) {
 
   SDL_Surface* tempSurf = NULL; // temporary surface
   //SDL_Surface* returnSurf = NULL; // surface to return 
@@ -356,10 +387,12 @@ void Graphics::displayLevelScreen(int level){ // to display level and game over 
 	case(10): //load level 10 screen 
 		screen = SDL_LoadBMP("screens/level10.bmp"); //load image
 		break;
+	case(11): //load you win screen
+		screen = SDL_LoadBMP("screens/youwin.bmp"); //load image
   }
 	SDL_BlitSurface(screen, NULL, display, NULL); // blit it to screen
 	SDL_UpdateWindowSurface( window ); // update window surface
-  	SDL_Delay(5000); // display for five seconds 
+  	SDL_Delay(2000); // display for two seconds 
 	SDL_FreeSurface(screen); //free screen surfacce
   
 } // end displayLevelScreen
@@ -381,10 +414,9 @@ bool Graphics::displayHome(){ // display home page until play selected and allow
 		// get mouse position
 		int x, y;
 		SDL_GetMouseState(&x,&y);
-		if (x >= 230 & x <= 380 & y >= 450 & y <= 520){ // if the mouse click happened in the play space
-			cout << "TRUE" << endl; 
-			return true;	
-		} else if( x >= 180 & x <= 430 & y >= 580 & y <= 650){ //if the mouse click happened in the man space
+		if (x >= 230 && x <= 380 && y >= 450 && y <= 520){ // if the mouse click happened in the play space
+			play = true;	
+		} else if( x >= 180 && x <= 430 && y >= 580 && y <= 650){ //if the mouse click happened in the man space
 			SDL_Surface *man = NULL;
 			man = SDL_LoadBMP("screens/manual.bmp");
 			SDL_BlitSurface(man, NULL, display, NULL); // display the manual 
@@ -403,7 +435,7 @@ bool Graphics::displayHome(){ // display home page until play selected and allow
 	} // end if m->type
   }//end while(!play)
 
-  SDL_FreeSurface(home); //free home surface befor returning  
+  SDL_FreeSurface(home); //free home surface before returning  
   return false; 
 
 } //end displayHome

@@ -10,12 +10,13 @@ int main(){
     //Ball variables-------------|
     
     int xposofball = 300;		//center of ball in pixel values
-    int yposofball = 800;		// "
+    int yposofball = 600;		// "
     int checkxpos;			// which of the 4 parts of the ball is hit
     int checkypos;			// "
     int i;				//which face of the ball was in contact with an object
     int face;				//"
     int radiusofball = 8;
+
     //movement variables---------|
     int xfactor = 1;			//determines how the position of the ball changes if there is a hit
     int yfactor = 1;			// "
@@ -50,149 +51,167 @@ int main(){
     Board Game;
     
     bool Quit = false; 			// loop flag
-    bool something = false;
-    int hold = 0; 
-    int paddlehold = 0; 
     
-  Quit = Game.DisplayHome(); int start = Game.StartGame(); 
-      //MAIN LOOP-----------------|
-
+    
   while( !Quit ){
-  while((start != 1) && (hold < 2) ){
-  	start = Game.StartGame();   	
-  }; 
-  if(start == 1)
-  	hold++;
-  start = 0;  
-  if(hold >2){
-  	paddlehold = 1; 
-  }
-  cout << start << endl; 	 
-  cout << "hello"<< endl; 
-  
-  
-  //Quit = Game.DisplayHome();	
-  //Game.DisplayHome(); // display home page
-  //while(!something){
-        
-        //SEE IF ANY PART OF THE BALL WAS HIT-------|
-        for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
-            checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
-            checkypos = yposofball +radiusofball*sin(i*M_PI/2);
-            type = Game.GetType(checkxpos,checkypos); 
-            if(type == 'w')
-            	Quit = 1; 
-          
-            if(type != 'e'){ 
-                hitball = 1;
-		face = i+1;
-                break;
-            } 
-            else
-            	hit = 0;    
-        }
-        if(type == 'i'){
-        	fallthrough = 1; 
-        	if(keepgoing == 1)
-        		Ondefault = 0; 
-        	else
-        		Ondefault = 1; 
-        	if(Game.Paddlecheck(xposofball,Ondefault)==1){
-        		fallthrough = 0;
-       		}
-        }   
-       
-        //CHANGE VELOCITY FACTORS-------------------|
-        if((hitball == 1) &&(fallthrough !=1)){
-            switch(face){
-                case 1:
-                    xfactor = -1;
-                    break;
-                case 2:
-                    yfactor = -1;
-                    break;
-                case 3:
-                    xfactor = 1;
-                    break;
-                case 4:
-                    yfactor = 1;
-                    break;
-            }
-        }
+  	Quit = Game.DisplayHome(); 
+	int level = 1; // start any game at level 1 
+	int lives = 3;
+	Game.resetScore();
+	bool life  = true;
+	Game.LevelUp(level);
+	while ( !Quit && level != 0){
+		Quit = Game.quit(); // do they want to quit? 
+		//LevelUp(level);
+		bool life  = true;
+		xposofball = 300;
+		yposofball = 600;
+		int start = Game.StartGame(); // wait for mouse click to start game
+      		while ( !Quit && life ) { 
+      			//SEE IF ANY PART OF THE BALL WAS HIT-------|
+			for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
+			    checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
+			    checkypos = yposofball +radiusofball*sin(i*M_PI/2);
+			    type = Game.GetType(checkxpos,checkypos); 
+			    
+			    
+			    if(type != 'e'){ 
+				hitball = 1;
+				face = i+1;
+				break;
+			    } else 
+			    	hit = 0;    
+			}
+			if(type == 'i'){
+				fallthrough = 1; 
+				if(keepgoing == 1)
+					Ondefault = 0; 
+				else
+					Ondefault = 1; 
+				if(Game.Paddlecheck(xposofball,Ondefault)==1){
+					fallthrough = 0;
+		       		}
+				//if (fallthrough == 1){
+				//	life = false;
+				//}
+			}   
+			if(type == 'd')
+			    	life = false;
+			 
+
+
+			//CHANGE VELOCITY FACTORS-------------------|
+			if((hitball == 1) && (fallthrough !=1)){
+			    switch(face){
+				case 1:
+				    xfactor = -1;
+				    break;
+				case 2:
+				    yfactor = -1;
+				    break;
+				case 3:
+				    xfactor = 1;
+				    break;
+				case 4:
+				    yfactor = 1;
+				    break;
+			    }
+			}
         
         //CHECK IF ANYTHING WAS HIT-----------------|
-        for(int k = 0; k<= Game.sizeofbullets(); k++){
-        	if(k == Game.sizeofbullets()){
-        		if(hitball == 1){
-				objectx = checkxpos; 
-				objecty = checkypos; 
-				hit = 1; 
-        		}
-        	}
-        	else{
-        		objectx = Game.getxbullet(k); 
-        		objecty = Game.getybullet(k); 
-        	}
-        	
-        	type = Game.GetType(objectx,objecty); 
-        	
-        	if(type != 'e'){
-        		hit = 1;
-        		if(k!=Game.sizeofbullets())
-        			Game.erasebullet(k);  
-        	}
-        		
-        	if(hit == 1){
-	     		donext = Game.doHit(objectx,objecty); 
-	     		
-			if(donext == 1) 			
-				startshoottimer = 1; 
-			if(donext == 2){ 			
-				startpadtimer = 1;
-			}
-	
-       		}
-        
-		if((startshoottimer == 1)||(keepshooting ==1)){
-	       		shoottimer++; 
-	       		keepshooting = 1; 
-	       		if(shoottimer == 6000){
-	       			keepshooting = 0; 
-	       			shoottimer = 0; 
-	       		}
-        	}
- 
-	       	if((startpadtimer == 1) || (keepgoing == 1)){
-			padtimer++; 
-			keepgoing = 1; 
-			if(padtimer == 2000){
-				keepgoing = 0;
-				Game.Paddlecheck(xposofball,1); 
-				padtimer = 0; 
+			for(int k = 0; k<= Game.sizeofbullets(); k++){
+				if(k == Game.sizeofbullets()){
+					if(hitball == 1){
+						objectx = checkxpos; 
+						objecty = checkypos; 
+						hit = 1; 
+					}
+				}
+				else{
+					objectx = Game.getxbullet(k); 
+					objecty = Game.getybullet(k); 
+				}
+			
+				type = Game.GetType(objectx,objecty); 
+				if( type == 'p') lives++;
+
+				if(type != 'e'){
+					hit = 1;
+					if(k!=Game.sizeofbullets())
+						Game.erasebullet(k);  
+				}
+				
+				if(hit == 1){
+			     		donext = Game.doHit(objectx,objecty); 
+					if(donext == 1) 			
+						startshoottimer = 1; 
+					if(donext == 2)			
+						startpadtimer = 1;
+		       		}
+		
+				if((startshoottimer == 1)||(keepshooting ==1)){
+			       		shoottimer++; 
+			       		keepshooting = 1; 
+			       		if(shoottimer == 6000){
+			       			keepshooting = 0; 
+			       			shoottimer = 0; 
+			       		}
+				}
+		 
+			       	if((startpadtimer == 1) || (keepgoing == 1)){
+					padtimer++; 
+					keepgoing = 1; 
+					if(padtimer == 2000){
+						keepgoing = 0;
+						Game.Paddlecheck(xposofball,1); 
+						padtimer = 0; 
+					} 
+				}
 			} 
-		}
-        } 
      	
-        //RESET VARIABLES---------------------------|
-        startshoottimer = 0; 
-        startpadtimer = 0; 							
-        fallthrough = 0; 
+			//RESET VARIABLES---------------------------|
+			startshoottimer = 0; 
+			startpadtimer = 0; 							
+			fallthrough = 0; 
  
    
-        //UPDATE WINDOW-----------------------------|
-        Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
-        Quit = Game.quit();
-        
-        
-        //UPDATE BALL POSITION----------------------|
-        xposofball = xposofball+ xfactor*xvelocity; 
-        yposofball = yposofball +yfactor*yvelocity;
+			//UPDATE WINDOW-----------------------------|
+			Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
+			while(start !=1)
+				start = Game.StartGame(); 
 
-  //} // while !something
-    
+			Quit = Game.quit();// Did the user try to exit the game?
+        
+        
+			//UPDATE BALL POSITION----------------------|
+			xposofball = xposofball+ xfactor*xvelocity; 
+			yposofball = yposofball +yfactor*yvelocity;
+			//cout << xvelocity << endl;
+		  } // end while (!Quit and life)
+		if(Game.LevelComplete()){
+			level++;			
+			Game.LevelUp(level);	// read in and setup level board
+		}else lives--;
+		if (lives == 0 ){
+			Game.LevelUp(0);
+			break;
+		}
+		  
+	          if (level == 6){ // levels where speed increases
+			xvelocity ++;
+			yvelocity ++;
+		  }
+		  if (level == 11){
+			Game.LevelUp(11);
+			break;
+		  }
+		} // end while (!Quit and level != 0)
+		
+		if (level == 0) Game.LevelUp(0);
 } // while !quit
     
-      Game.EndGame(); 
+  Game.EndGame(); 
+ 
 
-}
+} // end main 
 

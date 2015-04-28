@@ -19,7 +19,7 @@ class Board{
         
         // most important functions 
         int doHit(int,int); 			// executes a hit 
-	void DrawOnWindow(int, int,int,int); 	// draw everything needed on the screen 
+	void DrawOnWindow(int, int,int); 	// draw everything needed on the screen 
         
 	// functions for features     
         void Paddlesettings(int); 		// changes the specs of the paddle
@@ -42,8 +42,13 @@ class Board{
 	int StartGame(); 
 	
 	void DisplayBoard();			// unused function to display all the types of each position on the board 
-	void DisplayLevelScreen(int);		// display level or game over screen 
+	
 	bool DisplayHome();			// display home screen and access man page
+
+ 	void LevelUp(int);
+	bool LevelComplete();			// is the level complete?
+	void resetScore();			// to reset the score when playing a new game 
+			
 	
 	
     private:
@@ -58,26 +63,19 @@ class Board{
 	
 	vector< vector <char> > typeVec; 	// vec to store board types
   	vector< vector <int> > colorVec; 	// vec to store board colors
+	int score;				// to keep track of the score
 };
 
 Board::Board(){                        				  // constructor
     
+     score = 0; // beginning of game and the score is 0
     //MAIN BOARD array creation-----------|
     PlayingBoard = new Brick*[36];
     for(int i = 0; i<36; i++)           			  // make an array that is 36 long
         PlayingBoard[i] = new Brick[12];      			  // make each row be 12 wide
     
-    // INIT BOARD WITH FILE ---------------|
-    readfiles("levels/level1.txt"); 				  // read in level file
-    for(int n = 0; n<12; n++){					  // setting type and color
-        for(int k = 0; k <36; k++){
-        	SetType(n,k,typeVec[k][n],colorVec[k][n]);
-        }
-    }
-
+    
    //PADDLE-------------------------------|			  // initalizing all entire bottom row to be solid 
-   for( int p = 0; p<12; p++)
-   	SetType(p,35,'i',1);
    paddlenumber = 2; 						  // initiate normal paddle variables 
    paddleposition = 300-paddlelength/2; 			  // and position 
 }
@@ -88,7 +86,7 @@ Board::~Board(){						  // deconstructor
 int Board::StartGame(){
 	return window.WaitforClick(); 
 }
-void Board::DrawOnWindow(int xpos, int ypos,int shoot,int paddlehold){
+void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	window.updatebackground(); 
 	
 	for(int i = 0; i<12; i++){
@@ -111,18 +109,21 @@ int Board::doHit(int xpos, int ypos){				  // update the type of the spot once h
 	switch(GetType(xpos,ypos)){
 		case 'a':					  // single brick type 
 			SetType(newx,newy,'e',1);
-			cout << "A" << endl; 
+			//cout << "A" << endl; 
+			score += 10;
 			return 0;  
 			break; 
 		case 'h': 					  // double-hit brick type
 			SetType(newx,newy,'a',1);
-			cout << "hit double" << endl; 
+			score += 20;
+			//cout << "hit double" << endl; 
 			return 0;  
 			break; 
 		case 'x': 
-			cout << "special hit" << endl; 
-			cout << FindPopular()<< endl; 
+			//out << "special hit" << endl; 
+			//cout << FindPopular()<< endl; 
 			SetType(newx,newy,'e',1);
+			score += 30;
 			set = FindPopular(); 
 			for(int i = 0; i<12; i++){
 				for(int j = 0; j<36; j++){
@@ -136,18 +137,25 @@ int Board::doHit(int xpos, int ypos){				  // update the type of the spot once h
 			break; 
 		case 'g': 
 			SetType(newx,newy,'e',1);
+			score += 50;
 			return 1; 				  // return 1 for guns should be turned on 
 			break;  
 		case 'l':
 			paddlenumber = 3; 
+			score += 40;
 			SetType(newx,newy,'e',1);
 			return 2; 
 			break; 
 		case 'm': 
 			paddlenumber = 1; 
+			score += 40;
 			SetType(newx,newy,'e',1);
 			return 2; 
 			break; 	
+		case 'p':
+			score += 30;
+			SetType(newx,newy,'e',1);
+			break;
 	}
 	return 0; 
 }
@@ -175,10 +183,9 @@ char Board::FindPopular(){					  // Finds most popular color on board
 	for( k = 0; k<4; k++){
 		if(colorcount[k]>colorcount[k+1]){
 			mostpopular = k;			//mostpopular is the array in colorcount that has the highest number
-			//cout << mostpopular<<endl; 
+			 
 		}
-	}
-	cout <<"inside P:" <<mostpopular << endl; 
+	} 
 	if(mostpopular == 0)
 		return(6); 
 	else 
@@ -229,9 +236,12 @@ int Board::sizeofbullets(){
 
 char Board::GetType( int Xpos , int Ypos){					// IN WINDOW COORDINATES
 
-    if((Xpos < 0) || (Xpos > 600) || (Ypos < 0) || (Ypos > 900)){		// ball hit wall boundaries      
+    if((Xpos < 0) || (Xpos > 600) || (Ypos < 0)){		// ball hit wall boundaries      
 	 return('w');
     }
+    if(Ypos > 880)
+	return('d');
+
     newx = (int) Xpos/50;
     newy = (int) Ypos/25;
     return(PlayingBoard[newy][newx].getType());         	 // using the objfill member function to get stored type
@@ -245,8 +255,8 @@ void Board::SetType(int Xpos, int Ypos, char type, int color){       	 // using 
 
 
 
-void Board::readfiles(string filename){
-
+void Board::readfiles(string filename){ // function to read in text files for different levels
+  
   ifstream inFile;
   inFile.open(filename.c_str());
 
@@ -255,8 +265,7 @@ void Board::readfiles(string filename){
   int tempColor; // temp int to store color code being read in
   vector<char> tempTypeVec; // temp vec to store row of types
   vector<int> tempColorVec; // temp vec to store row of color codes
-  
-  //if(!inFile) cout << "inFile";
+    //if(!inFile) cout << "inFile";
   while(!inFile.eof()){ //while the file in not at the end
 	for(int i = 0; i < 12 ; i++){ // go through files, 12 bricks per row
 		inFile >> tempType >> tempColor; // take in the type and color of each element
@@ -267,11 +276,15 @@ void Board::readfiles(string filename){
 	colorVec.push_back(tempColorVec); // """"
 	tempTypeVec.clear(); // clear the temp vec so you can push next row into
 	tempColorVec.clear(); // """"
+
   }
+   for(int n = 0; n<12; n++){	// setting type and color with read in data
+        for(int k = 0; k <36; k++){
+        	SetType(n,k,typeVec[k][n],colorVec[k][n]);
+        }
+    }
 
   inFile.close();
-
-
 
 } // end readfiles
 
@@ -282,6 +295,7 @@ bool Board::quit(){
 }
 void Board::EndGame(){
   window.endGame(); 
+  
 }
 
 void Board::DisplayBoard(){
@@ -294,13 +308,68 @@ void Board::DisplayBoard(){
     }
 }
 
-void Board::DisplayLevelScreen(int level){
+void Board::LevelUp(int level){
   window.displayLevelScreen(level);
+  switch(level){ 
+	// cout "Here"
+	case 0:
+	case 1:
+ 		readfiles("levels/level1.txt"); 				  // read in level file
+		break;
+	case 2:
+ 		readfiles("levels/level2.txt"); 				  // read in level file
+		break;
+	case 3:
+ 		readfiles("levels/level3.txt"); 				  // read in level file
+		break;
+	case 4:
+ 		readfiles("levels/level4.txt"); 				  // read in level file
+		break;
+	case 5:
+ 		readfiles("levels/level5.txt"); 				  // read in level file
+		break;
+	case 6:
+ 		readfiles("levels/level6.txt"); 				  // read in level file
+		break;
+	case 7:
+ 		readfiles("levels/level7.txt"); 				  // read in level file
+		break;
+	case 8:
+ 		readfiles("levels/level8.txt"); 				  // read in level file
+		break;
+	case 9:
+ 		readfiles("levels/level9.txt"); 				  // read in level file
+		break;
+	case 10:
+ 		readfiles("levels/level10.txt"); 				  // read in level file
+		break;
+	case 11:
+		break;
+  } // end switch 
+
 }
 
 bool Board::DisplayHome(){
   return window.displayHome();
 }
+
+bool Board::LevelComplete(){ // function to determine if the level is complete
+
+  int bricks = 0;
+  for(int i = 0; i<35; i++){
+        for(int j = 0; j< 12; j++){
+            if( PlayingBoard[i][j].getType() != 'e') bricks++;        	
+        }    
+  }	
+  if (bricks==0) return true;
+  else return false; 
+
+
+} // end LevelComplete
+
+void Board::resetScore(){ // function to reset score at beginning of new game 
+	score = 0;
+}// end resetScore
 
 #endif
 
