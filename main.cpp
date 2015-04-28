@@ -9,8 +9,8 @@ int main(){
 	
     //Ball variables-------------|
     
-    int xposofball = 300;		//center of ball in pixel values
-    int yposofball = 600;		// "
+    double xposofball = 300;		//center of ball in pixel values
+    double yposofball = 600;		// " 
     int checkxpos;			// which of the 4 parts of the ball is hit
     int checkypos;			// "
     int i;				//which face of the ball was in contact with an object
@@ -20,8 +20,8 @@ int main(){
     //movement variables---------|
     int xfactor = 1;			//determines how the position of the ball changes if there is a hit
     int yfactor = 1;			// "
-    int xvelocity = 1; 
-    int yvelocity  = 1; 
+    double xvelocity = 0.7; 
+    double yvelocity  = 0.7; 
     int vchange = 0; 
     
     //Initiate variables---------|
@@ -184,8 +184,11 @@ int main(){
         
         
 			//UPDATE BALL POSITION----------------------|
+
 			xposofball = xposofball+ xfactor*xvelocity; 
 			yposofball = yposofball +yfactor*(yvelocity+vchange);
+			
+			
 			//cout << xvelocity << endl;
 		  } // end while (!Quit and life)
 		if(Game.LevelComplete()){

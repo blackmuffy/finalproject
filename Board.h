@@ -18,7 +18,7 @@ class Board{
         ~Board();
         
         // most important functions 
-        int doHit(int,int); 			// executes a hit 
+        int doHit(double,double); 			// executes a hit 
 	void DrawOnWindow(int, int,int); 	// draw everything needed on the screen 
         
 	// functions for features     
@@ -32,7 +32,7 @@ class Board{
 	int WhereOnPaddle(int); 
 	
 	// directly interfaces with Brick.h 
-        char GetType(int, int);      
+        char GetType(double, double);      
         void SetType(int, int, char,int);
       
 
@@ -104,7 +104,7 @@ void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	
 }
 
-int Board::doHit(int xpos, int ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
+int Board::doHit(double xpos, double ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
 	int set; 
 	
 	switch(GetType(xpos,ypos)){
@@ -246,7 +246,7 @@ int Board::sizeofbullets(){
 	return(window.getsizebullets()); 
 }
 
-char Board::GetType( int Xpos , int Ypos){					// IN WINDOW COORDINATES
+char Board::GetType( double Xpos , double Ypos){					// IN WINDOW COORDINATES
 
     if((Xpos < 0) || (Xpos > 600) || (Ypos < 0)){		// ball hit wall boundaries      
 	 return('w');
