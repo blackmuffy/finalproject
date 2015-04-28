@@ -18,7 +18,7 @@ class Board{
         ~Board();
         
         // most important functions 
-        int doHit(int,int); 			// executes a hit 
+        int doHit(double,double); 			// executes a hit 
 	void DrawOnWindow(int, int,int); 	// draw everything needed on the screen 
         
 	// functions for features     
@@ -105,7 +105,7 @@ void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	
 }
 
-int Board::doHit(int xpos, int ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
+int Board::doHit(double xpos, double ypos){				  // update the type of the spot once hit in WINDOW COORDINATES
 	int set; 
 	
 	switch(GetType(xpos,ypos)){
@@ -379,7 +379,7 @@ void Board::resetScore(){ // function to reset score at beginning of new game
 int Board::WhereOnPaddle(int xposofball){
 
   for(int i = 0; i < 10; i++){
-	if(xposofball == padddleposition-paddlelength/2+i) return 0;
+	if(xposofball == paddleposition-paddlelength/2+i) return 0;
 	else return 1; 
   }
 

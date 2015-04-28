@@ -24,6 +24,7 @@ class Board{
 	// functions for features     
         void Paddlesettings(int); 		// changes the specs of the paddle
         int Paddlecheck(int,int); 		// checks if ball hit paddle since the paddle is an irregular size
+	int WhereOnPaddle(int);			// check where on the paddle the ball hit to calculate rebound angle
         char FindPopular(); 			// returns most popular color
         int sizeofbullets();  			// interfaces with the bullets vector in graphics.h
 	int getxbullet(int); 			// get bullets[int].xpos
@@ -48,6 +49,7 @@ class Board{
  	void LevelUp(int);
 	bool LevelComplete();			// is the level complete?
 	void resetScore();			// to reset the score when playing a new game 
+
 			
 	
 	
@@ -373,6 +375,15 @@ bool Board::LevelComplete(){ // function to determine if the level is complete
 void Board::resetScore(){ // function to reset score at beginning of new game 
 	score = 0;
 }// end resetScore
+
+int Board::WhereOnPaddle(int xposofball){
+
+  for(int i = 0; i < 10; i++){
+	if(xposofball == paddleposition-paddlelength/2+i) return 0;
+	else return 1; 
+  }
+
+} // end WhereOnPaddle
 
 #endif
 
