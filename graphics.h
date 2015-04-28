@@ -193,6 +193,7 @@ void Graphics::drawBall(int xpos, int ypos){
 	destRect.h = 16; 
 	destRect.w = 16; 
 	SDL_BlitSurface(ball,NULL,display,&destRect);
+
 }
 int Graphics::drawPaddle(int xpos,int size){
 	int centeralign; 

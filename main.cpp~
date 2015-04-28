@@ -22,6 +22,7 @@ int main(){
     int yfactor = 1;			// "
     int xvelocity = 1; 
     int yvelocity  = 1; 
+    int vchange = 0;			
     
     //Initiate variables---------|
     int hit = 0;			//variable turns on when an object(ball or bullet) hits something 
@@ -48,21 +49,20 @@ int main(){
     int objectx; 			// recieves the x coordinate that should execute doHit
     int objecty;  			// recieves the y coordinate that should execute doHit
     
-    Board Game;
-    
-    bool Quit = false; 			// loop flag
+    Board Game;				// instance of the board class
+       
+    bool Quit = false; 			// loop flag for if the user xs the program 
     
     
   while( !Quit ){
   	Quit = Game.DisplayHome(); 
-	int level = 1; // start any game at level 1 
-	int lives = 3;
-	Game.resetScore();
+	int level = 1; // start every game at level 1 
+	int lives = 3; // reset lives at the beginning of the game 
+	Game.resetScore(); // reset the score at the beginning of the game 
 	bool life  = true;
 	Game.LevelUp(level);
-	while ( !Quit && level != 0){
+	while ( !Quit && level != 0){ // while the user has not quit and they have not lost
 		Quit = Game.quit(); // do they want to quit? 
-		//LevelUp(level);
 		bool life  = true;
 		xposofball = 300;
 		yposofball = 600;
@@ -73,8 +73,6 @@ int main(){
 			    checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
 			    checkypos = yposofball +radiusofball*sin(i*M_PI/2);
 			    type = Game.GetType(checkxpos,checkypos); 
-			    
-			    
 			    if(type != 'e'){ 
 				hitball = 1;
 				face = i+1;
@@ -90,6 +88,7 @@ int main(){
 					Ondefault = 1; 
 				if(Game.Paddlecheck(xposofball,Ondefault)==1){
 					fallthrough = 0;
+					vchange = Game.WhereOnPaddle(xposofball);	// change angle
 		       		}
 				//if (fallthrough == 1){
 				//	life = false;
@@ -98,7 +97,6 @@ int main(){
 			if(type == 'd')
 			    	life = false;
 			 
-
 
 			//CHANGE VELOCITY FACTORS-------------------|
 			if((hitball == 1) && (fallthrough !=1)){
@@ -152,7 +150,7 @@ int main(){
 				if((startshoottimer == 1)||(keepshooting ==1)){
 			       		shoottimer++; 
 			       		keepshooting = 1; 
-			       		if(shoottimer == 6000){
+			       		if(shoottimer == 600000){ // gun time 
 			       			keepshooting = 0; 
 			       			shoottimer = 0; 
 			       		}
@@ -185,15 +183,17 @@ int main(){
         
 			//UPDATE BALL POSITION----------------------|
 			xposofball = xposofball+ xfactor*xvelocity; 
-			yposofball = yposofball +yfactor*yvelocity;
-			//cout << xvelocity << endl;
+			yposofball = yposofball +yfactor*(yvelocity+vchange);
+			
 		  } // end while (!Quit and life)
 		if(Game.LevelComplete()){
-			level++;			
+				level++;
+			//lives++;			
 			Game.LevelUp(level);	// read in and setup level board
 		}else lives--;
 		if (lives == 0 ){
-			Game.LevelUp(0);
+			level == 0; 
+				Game.LevelUp(level);
 			break;
 		}
 		  
@@ -202,12 +202,13 @@ int main(){
 			yvelocity ++;
 		  }
 		  if (level == 11){
+			cout << "leve is 11";
 			Game.LevelUp(11);
 			break;
 		  }
 		} // end while (!Quit and level != 0)
 		
-		if (level == 0) Game.LevelUp(0);
+		//if (level == 0) Game.LevelUp(0);
 } // while !quit
     
   Game.EndGame(); 

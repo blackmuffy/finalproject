@@ -49,6 +49,7 @@ class Graphics {
 	bool displayHome();		// displays home screen
 	void displayLevelScreen(int); 	// displays level # screen (game over is 0)
 	int WaitforClick(); 
+	void drawscore(int); 
 	
   	
   private:  

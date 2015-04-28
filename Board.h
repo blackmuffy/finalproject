@@ -24,6 +24,7 @@ class Board{
 	// functions for features     
         void Paddlesettings(int); 		// changes the specs of the paddle
         int Paddlecheck(int,int); 		// checks if ball hit paddle since the paddle is an irregular size
+	int WhereOnPaddle(int);			// check where on the paddle the ball hit to calculate rebound angle
         char FindPopular(); 			// returns most popular color
         int sizeofbullets();  			// interfaces with the bullets vector in graphics.h
 	int getxbullet(int); 			// get bullets[int].xpos
@@ -48,6 +49,7 @@ class Board{
  	void LevelUp(int);
 	bool LevelComplete();			// is the level complete?
 	void resetScore();			// to reset the score when playing a new game 
+
 			
 	
 	
@@ -266,6 +268,8 @@ void Board::readfiles(string filename){ // function to read in text files for di
   vector<char> tempTypeVec; // temp vec to store row of types
   vector<int> tempColorVec; // temp vec to store row of color codes
     //if(!inFile) cout << "inFile";
+  typeVec.clear(); // clear vecs to read in new board
+  colorVec.clear();
   while(!inFile.eof()){ //while the file in not at the end
 	for(int i = 0; i < 12 ; i++){ // go through files, 12 bricks per row
 		inFile >> tempType >> tempColor; // take in the type and color of each element
@@ -278,6 +282,8 @@ void Board::readfiles(string filename){ // function to read in text files for di
 	tempColorVec.clear(); // """"
 
   }
+
+  cout << "size type" << typeVec.size();
    for(int n = 0; n<12; n++){	// setting type and color with read in data
         for(int k = 0; k <36; k++){
         	SetType(n,k,typeVec[k][n],colorVec[k][n]);
@@ -311,39 +317,38 @@ void Board::DisplayBoard(){
 void Board::LevelUp(int level){
   window.displayLevelScreen(level);
   switch(level){ 
-	// cout "Here"
-	case 0:
-	case 1:
+	case (0):
+	case (1):
  		readfiles("levels/level1.txt"); 				  // read in level file
 		break;
-	case 2:
- 		readfiles("levels/level2.txt"); 				  // read in level file
+	case (2):
+ 		readfiles("levels/level2.txt");				  // read in level file
 		break;
-	case 3:
+	case (3):
  		readfiles("levels/level3.txt"); 				  // read in level file
 		break;
-	case 4:
+	case (4):
  		readfiles("levels/level4.txt"); 				  // read in level file
 		break;
-	case 5:
+	case (5):
  		readfiles("levels/level5.txt"); 				  // read in level file
 		break;
-	case 6:
+	case (6):
  		readfiles("levels/level6.txt"); 				  // read in level file
 		break;
-	case 7:
+	case (7):
  		readfiles("levels/level7.txt"); 				  // read in level file
 		break;
-	case 8:
+	case (8):
  		readfiles("levels/level8.txt"); 				  // read in level file
 		break;
-	case 9:
+	case (9):
  		readfiles("levels/level9.txt"); 				  // read in level file
 		break;
-	case 10:
+	case (10):
  		readfiles("levels/level10.txt"); 				  // read in level file
 		break;
-	case 11:
+	case (11):
 		break;
   } // end switch 
 
@@ -356,7 +361,7 @@ bool Board::DisplayHome(){
 bool Board::LevelComplete(){ // function to determine if the level is complete
 
   int bricks = 0;
-  for(int i = 0; i<35; i++){
+  for(int i = 0; i<33; i++){
         for(int j = 0; j< 12; j++){
             if( PlayingBoard[i][j].getType() != 'e') bricks++;        	
         }    
@@ -370,6 +375,15 @@ bool Board::LevelComplete(){ // function to determine if the level is complete
 void Board::resetScore(){ // function to reset score at beginning of new game 
 	score = 0;
 }// end resetScore
+
+int Board::WhereOnPaddle(int xposofball){
+
+  for(int i = 0; i < 10; i++){
+	if(xposofball == padddleposition-paddlelength/2+i) return 0;
+	else return 1; 
+  }
+
+} // end WhereOnPaddle
 
 #endif
 
