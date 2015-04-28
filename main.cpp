@@ -22,6 +22,7 @@ int main(){
     int yfactor = 1;			// "
     int xvelocity = 1; 
     int yvelocity  = 1; 
+    int vchange = 0; 
     
     //Initiate variables---------|
     int hit = 0;			//variable turns on when an object(ball or bullet) hits something 
@@ -90,10 +91,9 @@ int main(){
 					Ondefault = 1; 
 				if(Game.Paddlecheck(xposofball,Ondefault)==1){
 					fallthrough = 0;
+					vchange = Game.WhereOnPaddle(xposofball);
 		       		}
-				//if (fallthrough == 1){
-				//	life = false;
-				//}
+		   		
 			}   
 			if(type == 'd')
 			    	life = false;
@@ -185,7 +185,7 @@ int main(){
         
 			//UPDATE BALL POSITION----------------------|
 			xposofball = xposofball+ xfactor*xvelocity; 
-			yposofball = yposofball +yfactor*yvelocity;
+			yposofball = yposofball +yfactor*(yvelocity+vchange);
 			//cout << xvelocity << endl;
 		  } // end while (!Quit and life)
 		if(Game.LevelComplete()){
