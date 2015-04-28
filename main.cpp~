@@ -10,7 +10,11 @@ int main(){
     //Ball variables-------------|
     
     double xposofball = 300;		//center of ball in pixel values
+<<<<<<< HEAD
     double yposofball = 600;		// "
+=======
+    double yposofball = 600;		// " 
+>>>>>>> 46a1e8041e67c6fe4ae4c579ad58f29958a7052d
     int checkxpos;			// which of the 4 parts of the ball is hit
     int checkypos;			// "
     int i;				//which face of the ball was in contact with an object
@@ -20,9 +24,15 @@ int main(){
     //movement variables---------|
     int xfactor = 1;			//determines how the position of the ball changes if there is a hit
     int yfactor = 1;			// "
+<<<<<<< HEAD
     double xvelocity = 1; 
     double yvelocity  = 1; 
     int vchange = 0;			
+=======
+    double xvelocity = 0.7; 
+    double yvelocity  = 0.7; 
+    int vchange = 0; 
+>>>>>>> 46a1e8041e67c6fe4ae4c579ad58f29958a7052d
     
     //Initiate variables---------|
     int hit = 0;			//variable turns on when an object(ball or bullet) hits something 
@@ -88,11 +98,13 @@ int main(){
 					Ondefault = 1; 
 				if(Game.Paddlecheck(xposofball,Ondefault)==1){
 					fallthrough = 0;
+<<<<<<< HEAD
 					vchange = Game.WhereOnPaddle(xposofball);	// change angle
+=======
+					vchange = Game.WhereOnPaddle(xposofball);
+>>>>>>> 46a1e8041e67c6fe4ae4c579ad58f29958a7052d
 		       		}
-				//if (fallthrough == 1){
-				//	life = false;
-				//}
+		   		
 			}   
 			if(type == 'd')
 			    	life = false;
@@ -182,9 +194,17 @@ int main(){
         
         
 			//UPDATE BALL POSITION----------------------|
+
 			xposofball = xposofball+ xfactor*xvelocity; 
+<<<<<<< HEAD
 			yposofball = yposofball +yfactor*(yvelocity+vchange);
 			
+=======
+			yposofball = yposofball +yfactor*yvelocity;
+			
+			
+			//cout << xvelocity << endl;
+>>>>>>> 46a1e8041e67c6fe4ae4c579ad58f29958a7052d
 		  } // end while (!Quit and life)
 		if(Game.LevelComplete()){
 				level++;
