@@ -185,7 +185,7 @@ int main(){
         
 			//UPDATE BALL POSITION----------------------|
 			xposofball = xposofball+ xfactor*xvelocity; 
-			yposofball = yposofball +yfactor*yvelocity;
+			yposofball = yposofball +yfactor*(yvelocity+vchange);
 			//cout << xvelocity << endl;
 		  } // end while (!Quit and life)
 		if(Game.LevelComplete()){
