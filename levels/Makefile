@@ -10,5 +10,4 @@ main: main.cpp Board.h Brick.h graphics.h
 #    g++ -c Board.h Bricks.h
 
 clean:
-    	rm -f *.o main
-
+    rm -f *.o main

@@ -20,8 +20,8 @@ int main(){
     //movement variables---------|
     int xfactor = 1;			//determines how the position of the ball changes if there is a hit
     int yfactor = 1;			// "
-    double xvelocity = 0; 
-    double yvelocity  = 0; 
+    double xvelocity = 1; 
+    double yvelocity  = 1; 
     int vchange = 0;			
     
     //Initiate variables---------|

@@ -32,7 +32,7 @@ class Board{
 	int erasebullet(int); 			// get rid of bullets[int]
 	
 	// directly interfaces with Brick.h 
-        char GetType(int, int);      
+        char GetType(double, double);      
         void SetType(int, int, char,int);
       
 
@@ -197,8 +197,6 @@ char Board::FindPopular(){					  // Finds most popular color on board
 
 
 int Board::Paddlecheck(int xpos,int paddledefault){
-	
-	
 	if(paddledefault == 1){
 		paddlenumber = 2; 
 	}
@@ -236,7 +234,7 @@ int Board::sizeofbullets(){
 	return(window.getsizebullets()); 
 }
 
-char Board::GetType( int Xpos , int Ypos){					// IN WINDOW COORDINATES
+char Board::GetType( double Xpos , double Ypos){					// IN WINDOW COORDINATES
 
     if((Xpos < 0) || (Xpos > 600) || (Ypos < 0)){		// ball hit wall boundaries      
 	 return('w');
