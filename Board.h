@@ -50,9 +50,6 @@ class Board{
 	bool LevelComplete();			// is the level complete?
 	void resetScore();			// to reset the score when playing a new game 
 
-			
-	
-	
     private:
         Graphics window; 			// initiate window 
         Brick ** PlayingBoard;			
@@ -94,9 +91,7 @@ void Board::DrawOnWindow(int xpos, int ypos,int shoot){
 	for(int i = 0; i<12; i++){
 		for(int j = 0; j<36; j++){
 			window.placeBrick(i*50,j*25,PlayingBoard[j][i].getType(),PlayingBoard[j][i].getColor()); 
-		}
 	}
-	
 	window.drawBall(xpos,ypos);
 	paddleposition = window.drawPaddle(paddleposition,paddlenumber);
 	window.drawbullet(xpos,ypos,shoot,paddlelength); 
@@ -129,7 +124,8 @@ int Board::doHit(double xpos, double ypos){				  // update the type of the spot 
 			set = FindPopular(); 
 			for(int i = 0; i<12; i++){
 				for(int j = 0; j<36; j++){
-					if(PlayingBoard[j][i].getColor() == set){
+					if((PlayingBoard[j][i].getColor() == set)&&(PlayingBoard[j][i].getType() == 'a')){
+		
 						SetType(i,j,'e',1); 
 					}
 						
@@ -209,8 +205,10 @@ int Board::Paddlecheck(int xpos,int paddledefault){
 		paddlelength = 80; 
 		
 	for(int i = 0; i<paddlelength; i++){ 			// paddle length has to be in pixels; 
-		if((paddleposition-paddlelength/2+i)==xpos)
-			return 1; 				// ball fell paddle area 	
+		if((paddleposition-paddlelength/2+i)==xpos){
+			cout << "HITT" << endl; 
+			return 1;
+ 		}				// ball fell paddle area 	
 	}
 	return 0; 
 	

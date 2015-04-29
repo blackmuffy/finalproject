@@ -56,6 +56,7 @@ int main(){
     
   while( !Quit ){
   	Quit = Game.DisplayHome(); 
+ 	if(Quit) break;
 	int level = 1; // start every game at level 1 
 	int lives = 3; // reset lives at the beginning of the game 
 	Game.resetScore(); // reset the score at the beginning of the game 
@@ -63,10 +64,12 @@ int main(){
 	Game.LevelUp(level);
 	while ( !Quit && level != 0){ // while the user has not quit and they have not lost
 		Quit = Game.quit(); // do they want to quit? 
+		if (Quit) break;
 		bool life  = true;
-		xposofball = 300;
-		yposofball = 600;
-		int start = Game.StartGame(); // wait for mouse click to start game
+		xposofball = 300; 
+		yposofball = 600; 
+		Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
+		while(Game.StartGame()!=1); 
       		while ( !Quit && life ) { 
       			//SEE IF ANY PART OF THE BALL WAS HIT-------|
 			for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
@@ -175,9 +178,9 @@ int main(){
    
 			//UPDATE WINDOW-----------------------------|
 			Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
-			while(start !=1)
-				start = Game.StartGame(); 
-
+			//while(start !=1)
+				//start = Game.StartGame(); 
+			
 			Quit = Game.quit();// Did the user try to exit the game?
         
         
@@ -186,14 +189,24 @@ int main(){
 			yposofball = yposofball +yfactor*(yvelocity+vchange);
 			
 		  } // end while (!Quit and life)
+			/*xposofball = 300; 
+			yposofball = 650; 
+			Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
+			while(Game.StartGame()!=1); */
+		
 		if(Game.LevelComplete()){
 				level++;
 			//lives++;			
 			Game.LevelUp(level);	// read in and setup level board
+			
 		}else lives--;
 		if (lives == 0 ){
-			level == 0; 
-				Game.LevelUp(level);
+			cout << "Level == 0" << endl;
+			level = 0; 
+			cout << "LEVEL = " << level << endl;
+			Game.LevelUp(level);
+			cout << "asdf" << endl; 
+			cout << "LEVEL AFTER: "<< level << endl;
 			break;
 		}
 		  

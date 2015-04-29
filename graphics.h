@@ -182,8 +182,6 @@ void Graphics::drawbullet
 		destRect.y = bullets[i].ypos;
 		SDL_BlitSurface(bullet,NULL,display,&destRect);
 	}
-	
-	
 }
 void Graphics::drawBall(int xpos, int ypos){
 	SDL_Surface* ball = load("bricks/ball3.bmp"); 
@@ -394,7 +392,7 @@ void Graphics::displayLevelScreen(int level){ // to display level and game over 
   }
 	SDL_BlitSurface(screen, NULL, display, NULL); // blit it to screen
 	SDL_UpdateWindowSurface( window ); // update window surface
-  	SDL_Delay(2000); // display for two seconds 
+  	SDL_Delay(1000); // display for 1 second 
 	SDL_FreeSurface(screen); //free screen surfacce
   
 } // end displayLevelScreen
