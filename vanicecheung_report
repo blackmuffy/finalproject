@@ -1,0 +1,20 @@
+Vanice Cheung for lab 7/8 (REDO LAB) 
+Note: I forgot to do a report for this lab so this will be my redo lab. 
+
+This is our github account: 
+https://github.com/blackmuffy/finalproject
+
+This week, I focused on going through the SDL tutorials. I wanted to be able to load image files that were not .bmp 
+because transparency images are not well supported in .bmp but is for .png. 
+
+User: the image of mario will appear in a window. 
+
+Internal: The SDL and SDL_Image library is used 
+
+Time Log for this week:
+	HRS: 	TASK:
+	1	Troubleshooting my account, had problems setting up github 
+	4	Went through some lazyFoo tutorials, focued on images
+	2	created picture.cpp 
+	
+	
