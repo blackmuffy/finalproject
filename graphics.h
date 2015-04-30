@@ -29,27 +29,28 @@ class Graphics {
 
   public:
  
-	Graphics();		// constructor
-	void endGame();		// to be run at end of game to free media and shut down sdl	
-	static SDL_Surface* load(const char* file); 	// static funciton to load surface
+	Graphics();					 // constructor
+	void endGame();					 // to be run at end of game to free media and shut down sdl	
+	static SDL_Surface* load(const char* file); 	 // static funciton to load surface
 	bool draw(SDL_Surface*, SDL_Surface*, int, int); // static function to draw surface on another surface at specified position
-	void placeBrick(int xpos, int ypos, char type, int color);	// place the brick of type in position xpos ypos
-	void updatebackground();
+	void placeBrick(int xpos, int ypos, char type, int color); // place the brick of type in position xpos ypos
+	void updatebackground(int xpos, int ypos, int paddleposition, int paddlenumber, int paddlelength,int lives);
 	void update();
-	void drawBall(int, int);		// draws ball given x and y position
-	int drawPaddle(int, int);		// draws paddle given size and center position
-  	void WaitEvent(int, int, int,int); 
-	bool quitEvent();	
-	void drawbullet(int,int,int,int); 
-	void deletebullet(int);
-	void updatebullet(); 
-	int getbulletx(int);
-	int getbullety(int); 
-	int getsizebullets();   
-	bool displayHome();		// displays home screen
-	void displayLevelScreen(int); 	// displays level # screen (game over is 0)
-	int WaitforClick(); 
-	void drawscore(int); 
+	void drawBall();				 // draws ball given x and y position
+	int drawPaddle();				 // draws paddle given size and center position
+  	void WaitEvent(int shoot, int xpos, int ypos ,int plength,int start); //checks for userinput ie mouse position and spacebar for shooting 		 
+	bool quitEvent();				  // closes window 
+	void drawbullet(int,int,int,int,int); 		  // draws all the bullets 
+	void deletebullet(int);				  // deletes bullet from bullets vector once it is out of use 
+	void updatebullet(); 				  // increments y position of all the bullets in bullets 
+	int getbulletx(int whichbullet);		  // get the x position of a bullet 
+	int getbullety(int whichbullet); 		  // "       y 
+	int getsizebullets();   			  // gets number of bullets 
+	bool displayHome();				  // displays home screen
+	void displayLevelScreen(int); 			  // displays level # screen (game over is 0)
+	int WaitforClick(); 				  // sees if anything is clicked
+	void drawScore(int); 
+	void drawLives(int); 
 	
   	
   private:  
@@ -61,27 +62,16 @@ class Graphics {
 	int mouseY; 
 	SDL_Event e; 	// event to close window
 	vector <bullet> bullets; 
-	/*SDL_Renderer* renderer
-	int screenWidth, screenHeight; 
-	SDL_Rect display Rect; 
-	SDL_Texture *background; 
-	SDL_Rect rectBackground;  
-	TTF_Font *font; 
-	SDL_Surface *message; 
-	SDL_Texture *text; 
-	SDL_Rect textRect; 
-	SDL_Color textColor; 
-	string data; 
-	bool typing; 
-	*/
+	int xpos; 
+	int ypos; 
+	int paddleposition; 
+	int size;//paddlenumber 
+	int paddlelength; 
+
 };
-
-
 
 // constructor to start up sdl and create window with space background
 Graphics::Graphics(){
-
-
   if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
 		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
 	} else {
@@ -90,31 +80,34 @@ Graphics::Graphics(){
 		if( window == NULL ) {
 			printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
 		} else {
-			display = SDL_GetWindowSurface( window ); //get 
-			background = SDL_LoadBMP("deep-space-2.bmp"); //load image
-			SDL_BlitSurface(background, NULL, display, NULL); // blit it to screen
-			SDL_UpdateWindowSurface( window ); // update window surface
-			//SDL_Delay(1000); //delay nine seconds
+			display = SDL_GetWindowSurface( window ); 		//get 
+			background = SDL_LoadBMP("deep-space-2.bmp");  		//load image
+			SDL_BlitSurface(background, NULL, display, NULL);	// blit it to screen
+			SDL_UpdateWindowSurface( window ); 			// update window surface
 		}
 	}
+  
 }
-int Graphics::WaitforClick(){
+int Graphics::WaitforClick(){							//did a click happen? 
 	SDL_Event event; 
 	SDL_WaitEvent(&event);
+	 
 	switch(event.type){
 		case SDL_MOUSEBUTTONDOWN: 
 			return 1;  
 	}
 	return 0; 
 }
-void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
+void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength,int start){	//checks for spacebar and finds mouse x position for setting the paddle
 	SDL_Event event; 
 	SDL_WaitEventTimeout(&event,0); 
+ 	if(start == 0) 
+	mouseX = 300; 
 	switch (event.type){
 		case SDL_MOUSEMOTION:
 			 mouseX = event.motion.x;
-			 /*if( mouseX < paddlelength/2) mouseX = paddlelength/2;
-			 if( mouseX > 600-paddlelength/2) mouseX = 600-paddlelength/2;*/
+			 //if( mouseX < paddlelength/2) mouseX = paddlelength/2;	// could not get this to work; 
+			 //if( mouseX > 600-paddlelength/2) mouseX = 600-paddlelength/2;
 			 mouseY = event.motion.y; 
 			 break; 
 		case SDL_KEYDOWN:
@@ -131,25 +124,74 @@ void Graphics::WaitEvent(int shoot, int xpos, int ypos, int paddlelength){
 					bullets.push_back(B); 
 				}
 			}
-				
 			break; 
 	}
 }
-void Graphics::drawscore(int score){
-	
-	/*gfont = TTF_OpenFont("bricks/bebas.ttf",30); 
-	if( gFont == NULL)
-	{
-		printf("failed to load font"); 
-	
-	}
-	else 
-	{	SDL_Color textColor = {0,0,0}; 
-		if(!gTextTexture.loadFromRenderedText("hello",textcolor); 
-	}
-	*/
+void Graphics::drawScore(int score){
+  int score2 = score;
+  int digits = 0;
+  while(score2){
+      score2 /= 10;
+      digits++;
+  }
+  SDL_Rect numloc;
+  numloc.y = 847;
+  int score3 = score;
+  for (int n = digits; n > 0; n--){
+      SDL_Surface *num;
+      numloc.x = 10 + n*20;
+      switch(score3%10){
+        case 0:
+            num = SDL_LoadBMP("numbers/zero.bmp");
+            break;
+        case 1:
+            num = SDL_LoadBMP("numbers/one.bmp");
+            break;
+        case 2:
+            num = SDL_LoadBMP("numbers/two.bmp");
+            break;
+        case 3:
+            num = SDL_LoadBMP("numbers/three.bmp");
+            break;
+        case 4:
+            num = SDL_LoadBMP("numbers/four.bmp");
+            break;
+        case 5:
+            num = SDL_LoadBMP("numbers/five.bmp");
+            break;
+        case 6:
+            num = SDL_LoadBMP("numbers/six.bmp");
+            break;
+        case 7:
+            num = SDL_LoadBMP("numbers/seven.bmp");
+            break;
+        case 8:
+            num = SDL_LoadBMP("numbers/eight.bmp");
+            break;
+        case 9:
+            num = SDL_LoadBMP("numbers/nine.bmp");
+            break;
+       
+    } //end switch
+    SDL_BlitSurface(num, NULL, display, &numloc);
+    score3 = score3/10;
+    SDL_FreeSurface(num);
+  } // end for n < digits 
 
 }
+void Graphics::drawLives(int lives){
+	SDL_Surface *star = NULL;
+  	star = SDL_LoadBMP("bricks/lives.bmp");
+  	SDL_Rect starPlace;
+  	for (int l = 0; l < lives; l++){ // draw correct number of lives
+      		starPlace.x = 560 - l*40;
+      		starPlace.y = 860;
+      		SDL_BlitSurface(star, NULL, display, &starPlace);
+  	}
+  SDL_FreeSurface(star);
+}
+
+//-----------------------------managing bullet functions 
 void Graphics::updatebullet(){
 	int i; 
 	for(i = 0; i<bullets.size(); i++){	
@@ -171,9 +213,9 @@ void Graphics::deletebullet(int i){
 	bullets.erase(bullets.begin()+i); 
 }
 
-void Graphics::drawbullet
-(int xpos, int ypos,int shoot,int paddlelength){
-	WaitEvent(shoot,xpos,ypos,paddlelength);
+//-------------------------------draw functions 
+void Graphics::drawbullet(int xpos, int ypos,int shoot,int paddlelength,int start){
+	WaitEvent(shoot,xpos,ypos,paddlelength,start);
 	int i; 
 	SDL_Surface* bullet = load("bricks/bullet.bmp"); 
 	SDL_Rect destRect;
@@ -183,7 +225,8 @@ void Graphics::drawbullet
 		SDL_BlitSurface(bullet,NULL,display,&destRect);
 	}
 }
-void Graphics::drawBall(int xpos, int ypos){
+
+void Graphics::drawBall(){
 	SDL_Surface* ball = load("bricks/ball3.bmp"); 
 	SDL_Rect destRect;
 	destRect.x = xpos-8; 
@@ -191,9 +234,9 @@ void Graphics::drawBall(int xpos, int ypos){
 	destRect.h = 16; 
 	destRect.w = 16; 
 	SDL_BlitSurface(ball,NULL,display,&destRect);
-
 }
-int Graphics::drawPaddle(int xpos,int size){
+
+int Graphics::drawPaddle(){
 	int centeralign; 
 	if(size == 1)
 		centeralign = 20; 
@@ -207,7 +250,7 @@ int Graphics::drawPaddle(int xpos,int size){
 	SDL_Surface* paddleL = load("bricks/padL.bmp"); 
 	
 	SDL_Rect destRect;
-	destRect.x = mouseX-centeralign; 	
+	destRect.x = mouseX-centeralign; 					// center the paddle based on which paddle it is 
 	destRect.y = 827; 
 	
 	if(size == 1){
@@ -222,10 +265,13 @@ int Graphics::drawPaddle(int xpos,int size){
 }
 
 
-void Graphics::updatebackground(){
-  
+void Graphics::updatebackground(int Xpos, int Ypos, int paddleposition,int paddlenumber, int paddlelength,int lives){
+ 
+  xpos = Xpos; 
+  ypos = Ypos; 
+  size = paddlenumber; 
   SDL_BlitSurface(background, NULL, display, NULL); // blit it to screen
-  
+    drawLives(lives); 
 } // end background 
 
 void Graphics::update(){
@@ -253,13 +299,6 @@ void Graphics::endGame(){
 
   // load BMP to surface and return NULL if it doen't load correctly
   if( (tempSurf = SDL_LoadBMP(File)) == NULL) return NULL;
-
-  // unsure what to do here... SDL2 got rid of SDL_DisplayFormat... sooo surface free in space 
-  /*returnSurf = SDL_DisplayFormat(tempSurf); // formate surface to return
-  SDL_FreeSurface(tempSurf); // free temporary surface */
-  /*returnSurf = SDL_ConvertSurface( tempSurf, window->format, NULL);
-  SDL_FreeSurface(tempSurf);*/
-
   return tempSurf; // return loaded surface
 
 } // end load

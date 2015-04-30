@@ -52,7 +52,7 @@ int main(){
     Board Game;				// instance of the board class
        
     bool Quit = false; 			// loop flag for if the user xs the program 
-    
+    int start; 
     
   while( !Quit ){
   	Quit = Game.DisplayHome(); 
@@ -68,9 +68,11 @@ int main(){
 		bool life  = true;
 		xposofball = 300; 
 		yposofball = 600; 
-		Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
+		start = 0; 
+		Game.DrawOnWindow(xposofball,yposofball,keepshooting,start,lives); 
 		while(Game.StartGame()!=1); 
       		while ( !Quit && life ) { 
+			start = 1; 
       			//SEE IF ANY PART OF THE BALL WAS HIT-------|
 			for(i = 0; i<4; i++){                    			// all eight positions around the ball going clockwise
 			    checkxpos = xposofball + radiusofball*cos(i*M_PI/2);
@@ -177,7 +179,7 @@ int main(){
  
    
 			//UPDATE WINDOW-----------------------------|
-			Game.DrawOnWindow(xposofball,yposofball,keepshooting); 
+			Game.DrawOnWindow(xposofball,yposofball,keepshooting,start,lives); 
 			//while(start !=1)
 				//start = Game.StartGame(); 
 			
