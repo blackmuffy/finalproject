@@ -337,7 +337,7 @@ bool Board::LevelComplete(){ 							  // function to determine if the level is c
   int bricks = 0;
   for(int i = 0; i<33; i++){
         for(int j = 0; j< 12; j++){
-            if( PlayingBoard[i][j].getType() != 'e') bricks++;        	
+            if( PlayingBoard[i][j].getType() != 'e' || PlayingBoard[i][j].getType() != 's') bricks++;        	
         }    
   }	
   if (bricks==0) return true;
